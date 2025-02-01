@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import authService from '../../services/auth/AuthService';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../../validations/auth/LoginSchema';
 import { ToastService } from '../../services/common/ToastService';
+import { useAuth } from '../../context/AuthContext';
+import { AuthService } from '../../services/auth/AuthService';
 
 // Definindo os tipos para os campos do formulário
 interface ILoginForm {
@@ -12,8 +13,9 @@ interface ILoginForm {
     password_hash: string;
 }
 
-function Login() {
+const Login: React.FC = () => {
     const navigate = useNavigate();
+    const { login } = useAuth(); // Obter a função de login do contexto
 
     const {
         register,
@@ -23,13 +25,16 @@ function Login() {
 
     const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
         try {
-            const res = await authService.login({
+            const res = await AuthService.login({
                 email: data.email,
                 password_hash: data.password_hash,
             });
-            console.log(res)
+
+            // retorna os dados do usuário autenticado
+            login({ ...res.user, id: res.user.id.toString() });
+
             ToastService.success('Login realizado com sucesso');
-            navigate('/');
+            navigate('/api/vehicles');
         } catch (error: any) {
             ToastService.error(error.message || 'Erro ao fazer login');
         }

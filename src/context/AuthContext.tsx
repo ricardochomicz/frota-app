@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 // Definindo o tipo do usuário
 interface User {
-    id: string;
+    id?: string;
     name: string;
     email: string;
-    role: string;
+    role?: string;
 }
 
 // Tipando o valor do contexto
@@ -27,11 +27,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const login = (userData: User) => {
         setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));  // Armazenando o usuário no localStorage
     };
 
     const logout = () => {
         setUser(null);
+        localStorage.removeItem('user'); // Removendo o usuário do localStorage
     };
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));  // Carrega o usuário do localStorage
+        } else {
+            window.location.href = "/login"
+        }
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>

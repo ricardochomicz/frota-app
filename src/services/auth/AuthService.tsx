@@ -23,7 +23,7 @@ interface AuthResponse {
     };
 }
 
-const AuthService = {
+export const AuthService = {
     async register(userData: UserData): Promise<AuthResponse> {
         try {
             const response = await axios.post<AuthResponse>(`${API_URL}/register`, userData);
@@ -37,10 +37,11 @@ const AuthService = {
         try {
             const response = await api.post("/login", credentials);
             console.log(response)
-            const { token } = response.data;
+            const { token, user } = response.data;
 
             if (token) {
                 this.setToken(token);
+                this.setUser(user);
             }
 
             return response.data;
@@ -49,9 +50,14 @@ const AuthService = {
         }
     },
 
-    async getMe(): Promise<any> { // Substitua 'any' pelo tipo correto do usuário
+    async getMe(): Promise<any> {
         try {
-            const response = await api.get("/me");
+            const response = await api.get('/api/me', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,  // Adiciona o token no cabeçalho
+                },
+            });
+            console.log(response)
             return response.data;
         } catch (error: any) {
             throw error.response?.data || { error: "Erro ao obter dados do usuário" };
@@ -67,9 +73,22 @@ const AuthService = {
         return localStorage.getItem("token");
     },
 
+    setUser(user: any): void {
+        localStorage.setItem("user", JSON.stringify(user));
+    },
+
+    async getUser() {
+        const user = localStorage.getItem('user');
+        return user ? JSON.parse(user) : null;
+    },
+
     removeToken(): void {
         localStorage.removeItem("token");
         delete axios.defaults.headers.common['Authorization'];
+    },
+
+    removeUser() {
+        localStorage.removeItem('user');
     },
 
     logout(): void {
@@ -78,4 +97,6 @@ const AuthService = {
     },
 };
 
-export default AuthService;
+
+
+
