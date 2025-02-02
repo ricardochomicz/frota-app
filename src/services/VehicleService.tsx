@@ -31,6 +31,11 @@ const VehicleService = {
 
     update(id, data) {
         return api.put(`/api/vehicles/${id}/edit`, data)
+    },
+
+    destroy(id) {
+        window.confirm('Tem certeza que deseja excluir esse veículo?')
+        return api.delete(`/api/vehicle/${id}/delete`)
     }
 };
 
