@@ -12,7 +12,7 @@ interface IVehicleResponse {
     data: IVehicle;
 }
 
-function VehicleEdit() {
+const VehicleEdit = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [vehicle, setVehicle] = useState<IVehicle | null>(null);

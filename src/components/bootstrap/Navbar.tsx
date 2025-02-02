@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthService } from "../../services/auth/AuthService";
 
-function NavBar() {
+const NavBar = () => {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const loggedUser = AuthService.getUser();
+        setUser(loggedUser);
+    }, []);
+
+    if (!user) return null;
     return (
         <div>
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -27,7 +36,7 @@ function NavBar() {
                                 <Link to="/api/vehicles" className="text-gray-900 dark:text-white hover:underline">Veículos</Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-900 dark:text-white hover:underline">Pneus</a>
+                                <Link to="/api/tires" className="text-gray-900 dark:text-white hover:underline">Pneus</Link>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-900 dark:text-white hover:underline">Manutenção</a>

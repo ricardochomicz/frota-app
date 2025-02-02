@@ -6,6 +6,9 @@ import Login from "../components/auth/Login";
 import VehiclesIndex from "../components/vehicles/VehiclesIndex";
 import VehicleCreate from "../components/vehicles/VehicleCreate";
 import VehiclesEdit from "../components/vehicles/VehicleEdit";
+import TiresIndex from "../components/tires/TiresIndex";
+import TireCreate from "../components/tires/TireCreate";
+import TireEdit from "../components/tires/TireEdit";
 
 const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional Component
     return (
@@ -16,6 +19,9 @@ const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional
             <Route path="/api/vehicles" element={<VehiclesIndex />} />
             <Route path="/api/vehicle/create" element={<VehicleCreate />} />
             <Route path="/api/vehicle/:id/edit" element={<VehiclesEdit />} />
+            <Route path="/api/tires" element={<TiresIndex />} />
+            <Route path="/api/tires/create" element={<TireCreate />} />
+            <Route path="/api/tires/:id/edit" element={<TireEdit />} />
         </Routes>
     );
 };

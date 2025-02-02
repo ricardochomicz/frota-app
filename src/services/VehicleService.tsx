@@ -13,8 +13,16 @@ const VehicleService = {
         return api.post('/api/vehicles', data)
     },
 
-    getAll() {
-        return api.get("/api/vehicles")
+    getAll(page: number, limit: number, filters: { license_plate?: string; brand?: string; model?: string }) {
+        const params = new URLSearchParams({
+            page: String(page),
+            limit: String(limit),
+            ...(filters.license_plate ? { license_plate: filters.license_plate } : {}),
+            ...(filters.brand ? { brand: filters.brand } : {}),
+            ...(filters.model ? { model: filters.model } : {})
+        });
+
+        return api.get(`/api/vehicles?${params.toString()}`);
     },
 
     get(id) {

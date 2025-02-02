@@ -77,9 +77,9 @@ export const AuthService = {
         localStorage.setItem("user", JSON.stringify(user));
     },
 
-    async getUser() {
-        const user = localStorage.getItem('user');
-        return user ? JSON.parse(user) : null;
+    getUser() {
+        const userString = localStorage.getItem('user');
+        return userString ? JSON.parse(userString) : null;
     },
 
     removeToken(): void {

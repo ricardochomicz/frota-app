@@ -5,8 +5,10 @@ import AppRoutes from './routes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './context/AuthContext';
 import NavBar from './components/bootstrap/Navbar';
+import usePace from './helpers/PaceJs';
 
 function App() {
+  usePace();
   return (
     <AuthProvider>
 
