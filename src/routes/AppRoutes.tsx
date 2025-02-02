@@ -9,6 +9,8 @@ import VehiclesEdit from "../components/vehicles/VehicleEdit";
 import TiresIndex from "../components/tires/TiresIndex";
 import TireCreate from "../components/tires/TireCreate";
 import TireEdit from "../components/tires/TireEdit";
+import MaintenancesIndex from "../components/maintenances/MaintenancesIndex";
+import MaintenanceCreate from "../components/maintenances/MaintenanceCreate";
 
 const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional Component
     return (
@@ -22,6 +24,8 @@ const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional
             <Route path="/api/tires" element={<TiresIndex />} />
             <Route path="/api/tires/create" element={<TireCreate />} />
             <Route path="/api/tires/:id/edit" element={<TireEdit />} />
+            <Route path="/api/maintenances" element={<MaintenancesIndex />} />
+            <Route path="/api/maintenances/create" element={<MaintenanceCreate />} />
         </Routes>
     );
 };

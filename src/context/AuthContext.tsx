@@ -41,7 +41,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setUser(JSON.parse(storedUser));  // Carrega o usuário do localStorage
         } else {
             localStorage.removeItem('user');
-            window.location.href = "/login"
+            // window.location.href = "/login"
         }
     }, []);
 

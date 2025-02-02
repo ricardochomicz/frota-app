@@ -55,7 +55,7 @@ const NavBar = () => {
                                     <Link to="/api/tires" className="text-gray-900 dark:text-white hover:underline">Pneus</Link>
                                 </li>
                                 <li>
-                                    <a href="#" className="text-gray-900 dark:text-white hover:underline">Manutenção</a>
+                                    <Link to="/api/maintenances" className="text-gray-900 dark:text-white hover:underline">Manutenção</Link>
                                 </li>
                                 <li>
                                     <a href="#" className="text-gray-900 dark:text-white hover:underline">Análise de Custo</a>

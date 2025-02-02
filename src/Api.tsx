@@ -1,8 +1,9 @@
-import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { AuthService } from './services/auth/AuthService';
 
+// Criação da instância do axios
 const api = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "http://localhost:5000", // Ajuste a URL base conforme necessário
 });
 
 // Intercepta todas as requisições e adiciona o token automaticamente
@@ -10,11 +11,12 @@ api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         const token = AuthService.getToken();
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`; // Adiciona o token no header de requisição
         }
-        return config;
+        return config; // Retorna a configuração da requisição com o token
     },
-    (error) => {
+    (error: AxiosError) => {
+        // Se ocorrer um erro na requisição, retorna a promessa rejeitada
         return Promise.reject(error);
     }
 );
@@ -23,13 +25,23 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => {
         console.log("Resposta da API:", response.data); // Debug da resposta
-        return response;
+        return response; // Retorna a resposta da API
     },
-    (error) => {
+    (error: AxiosError) => {
         console.error("Erro da API:", error);
-        if (error.response?.status === 401) {
-            AuthService.removeToken(); // Remove token inválido
-            window.location.href = "/login"; // Redireciona para a página de login
+
+        // Verifica se há resposta da API
+        if (error.response) {
+            // Se o status da resposta for 401 (não autorizado), trata o token expirado
+            if (error.response.status === 401) {
+                AuthService.removeToken(); // Remove o token inválido
+                // Você pode decidir se precisa redirecionar para a página de login
+                // window.location.href = "/login"; // Redireciona para a página de login
+            }
+            // Adicionar outras verificações de status, como 403 (forbidden), 500 (server error) se necessário
+        } else {
+            // Caso não haja resposta do servidor
+            console.error("Erro sem resposta do servidor:", error);
         }
         return Promise.reject(error); // Retorna o erro caso contrário
     }

@@ -1,54 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import VehicleService from "../../services/VehicleService";
+import MaintenanceService from "../../services/MaintenanceService";
 import { ToastService } from "../../services/common/ToastService";
-import { IVehicle } from "../../interfaces/VehicleInterface";
-import { translateFuelType } from "../../helpers/Helpers";
+import { IMaintenance } from "../../interfaces/MaintenanceInterface";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faTimes, faFilter, faBroom } from '@fortawesome/free-solid-svg-icons';
 import { InputMask } from '@react-input/mask';
+import { format } from 'date-fns';
 
-const VehiclesIndex = () => {
-    // Tipando o estado com a interface IVehicle[]
-    const [vehicles, setVehicles] = useState<IVehicle[]>([]);
+
+const MaintenancesIndex = () => {
+    const [maintenances, setMaintenances] = useState<IMaintenance[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [filters, setFilters] = useState({ license_plate: "", brand: "", model: "" });
+    const [filters, setFilters] = useState({ type: "", startDate: "", endDate: "", license_plate: "" });
     const limit = 5
 
-    const fetchVehicles = async () => {
+    const fetchMaintenances = async () => {
         // setLoading(true)
         try {
-            const response = await VehicleService.getAll(page, limit, filters);
-            setVehicles(response.data.data);
+            const response = await MaintenanceService.getAll(page, limit, {
+                ...filters,
+                startDate: filters.startDate ? new Date(filters.startDate) : undefined,
+                endDate: filters.endDate ? new Date(filters.endDate) : undefined,
+            });
+            console.log(response)
+            setMaintenances(response.data.data);
             setTotalPages(response.data.totalPages);
         } catch (error) {
-            setError("Erro ao carregar os veículos");
-            ToastService.error("Erro ao carregar veículos.");
+            setError("Erro ao carregar as manuteções");
+            ToastService.error("Erro ao carregar manutenções.");
         } finally {
             setLoading(false); // Sempre execute isso após o processo
         }
 
     };
     useEffect(() => {
-        fetchVehicles();
+        fetchMaintenances();
     }, [page, filters]);
 
-    const handleDelete = async (vehicleId) => {
+    const handleDelete = async (maintenanceId) => {
         try {
-            await VehicleService.destroy(vehicleId)
-            ToastService.success("Veículo excluído com sucesso!");
-            await fetchVehicles()
+            await MaintenanceService.destroy(maintenanceId)
+            ToastService.success("Manuteção excluída com sucesso!");
+            await fetchMaintenances()
         } catch (error) {
-            ToastService.error("Erro ao excluir veículo!")
+            ToastService.error("Erro ao excluir manuteção!")
         }
     };
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
-        setPage(1); // Reinicia a paginação ao filtrar
+        setPage(1);
+    };
+
+    const clearFilters = () => {
+        setFilters({ type: "", startDate: "", endDate: "", license_plate: "" });
+        setPage(1);
     };
 
     if (error) {
@@ -61,9 +71,16 @@ const VehiclesIndex = () => {
 
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
             <div className="flex justify-between items-center mb-4">
-                <Link to="/api/vehicle/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novo Veículo</Link>
+                <Link to="/api/maintenances/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Nova Manutenção</Link>
                 <div className="flex gap-2 ml-auto">
                     <FontAwesomeIcon icon={faFilter} className="text-gray-500 mt-4" size="lg" />
+                    <input
+                        type="text"
+                        placeholder="Tipo"
+                        name="type"
+                        value={filters.type} onChange={handleFilterChange}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
                     <InputMask mask="___-____" replacement={{ _: /[A-Za-z0-9]/ }}
                         name="license_plate"
                         placeholder="Placa"
@@ -72,19 +89,20 @@ const VehiclesIndex = () => {
                     />
 
                     <input
-                        type="text"
-                        name="brand"
-                        placeholder="Marca"
-                        value={filters.brand} onChange={handleFilterChange}
+                        type="date"
+                        name="startDate"
+                        value={filters.startDate} onChange={handleFilterChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     <input
-                        type="text"
-                        name="model"
-                        placeholder="Modelo"
-                        value={filters.model} onChange={handleFilterChange}
+                        type="date"
+                        name="endDate"
+                        value={filters.endDate} onChange={handleFilterChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
+                    <button onClick={clearFilters} type="submit" className="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <FontAwesomeIcon icon={faBroom} className="text-white" size="lg" />
+                    </button>
 
                 </div>
             </div>
@@ -102,37 +120,39 @@ const VehiclesIndex = () => {
                     <div className="sm:rounded-lg w-full overflow-x-scroll md:overflow-auto  max-w-7xl 2xl:max-w-none mt-2">
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-                                Lista de Veículos
+                                Lista de Manutenções
 
                             </caption>
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" className="px-6 py-3">#</th>
-                                    <th scope="col" className="px-6 py-3">Marca</th>
-                                    <th scope="col" className="px-6 py-3">Modelo</th>
-                                    <th scope="col" className="px-6 py-3 text-center">Ano</th>
-                                    <th scope="col" className="px-6 py-3 text-center">Placa</th>
+                                    <th scope="col" className="px-6 py-3">Tipo</th>
+                                    <th scope="col" className="px-6 py-3">Veículo</th>
+                                    <th scope="col" className="px-6 py-3 text-center">Próxima Manutenção</th>
+                                    <th scope="col" className="px-6 py-3 text-center">Lançado por</th>
+                                    <th scope="col" className="px-6 py-3 text-center">Data</th>
                                     <th scope="col" className="px-6 py-3 text-center">...</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {vehicles.map((vehicle) => (
-                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={vehicle.id}>
+                                {maintenances.map((maintenance) => (
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={maintenance.id}>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {vehicle.id}
+                                            {maintenance.id}
                                         </th>
-                                        <td className="px-6 py-4">{vehicle.brand}</td>
+                                        <td className="px-6 py-4">{maintenance.type}</td>
                                         <td className="px-6 py-4">
-                                            {vehicle.model}<br />
-                                            <small>{translateFuelType(vehicle.fuel_type)}</small>
+                                            {maintenance.vehicle.brand} - {maintenance.vehicle.model}<br />
+                                            <small>{maintenance.vehicle.license_plate}</small>
                                         </td>
-                                        <td className="px-6 py-4 text-center">{vehicle.year}</td>
-                                        <td className="px-6 py-4 text-center">{vehicle.license_plate}</td>
+                                        <td className="px-6 py-4 text-center">{maintenance.mileage_at_maintenance} Km</td>
+                                        <td className="px-6 py-4 text-center">{maintenance.user.name}</td>
+                                        <td className="px-6 py-4 text-center">{format(maintenance.created_at, "dd/MM/yyyy")}</td>
                                         <td className="px-6 py-4 text-center">
-                                            <Link to={`/api/vehicle/${vehicle.id}/edit`} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            <Link to={`/api/maintenances/${maintenance.id}/edit`} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </Link>
-                                            <button type="button" onClick={() => handleDelete(vehicle.id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                            <button type="button" onClick={() => handleDelete(maintenance.id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
                                         </td>
@@ -157,4 +177,4 @@ const VehiclesIndex = () => {
     );
 };
 
-export default VehiclesIndex;
+export default MaintenancesIndex;

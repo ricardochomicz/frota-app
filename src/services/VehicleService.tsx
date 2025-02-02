@@ -1,5 +1,3 @@
-
-import { DatabaseSync } from "node:sqlite";
 import api from "../Api";
 import { IVehicle } from "../interfaces/VehicleInterface";
 import { AuthService } from "../services/auth/AuthService";
@@ -36,6 +34,10 @@ const VehicleService = {
     destroy(id) {
         window.confirm('Tem certeza que deseja excluir esse veículo?')
         return api.delete(`/api/vehicle/${id}/delete`)
+    },
+
+    getAllVehiclesToSelect() {
+        return api.get(`/api/to-select`);
     }
 };
 
