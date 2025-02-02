@@ -1,6 +1,7 @@
 import axios from 'axios';
 import api from '../../Api';
 
+
 const API_URL = 'http://localhost:5000';
 
 interface UserData {
@@ -23,7 +24,10 @@ interface AuthResponse {
     };
 }
 
+
+
 export const AuthService = {
+
     async register(userData: UserData): Promise<AuthResponse> {
         try {
             const response = await axios.post<AuthResponse>(`${API_URL}/register`, userData);
@@ -91,9 +95,16 @@ export const AuthService = {
         localStorage.removeItem('user');
     },
 
-    logout(): void {
-        this.removeToken();
-        window.location.href = "/login";
+    async logout(): Promise<void> {
+        try {
+            await api.post('/api/logout');  // Faz a requisição de logout
+            this.removeToken();
+            this.removeUser();
+
+        } catch (error) {
+            console.error('Erro ao realizar logout:', error);
+        }
+
     },
 };
 

@@ -36,9 +36,9 @@ const VehiclesIndex = () => {
         fetchVehicles();
     }, [page, filters]);
 
-    const handleDelete = async (tireId) => {
+    const handleDelete = async (vehicleId) => {
         try {
-            await VehicleService.destroy(tireId)
+            await VehicleService.destroy(vehicleId)
             ToastService.success("Veículo excluído com sucesso!");
             await fetchVehicles()
         } catch (error) {
