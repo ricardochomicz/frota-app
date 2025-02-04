@@ -26,7 +26,6 @@ const MaintenancesIndex = () => {
                 startDate: filters.startDate ? new Date(filters.startDate) : undefined,
                 endDate: filters.endDate ? new Date(filters.endDate) : undefined,
             });
-            console.log(response)
             setMaintenances(response.data.data);
             setTotalPages(response.data.totalPages);
         } catch (error) {

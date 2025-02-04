@@ -5,6 +5,7 @@ import { ToastService } from "../../services/common/ToastService";
 import { ITires } from "../../interfaces/TiresInterface";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from "../../services/auth/AuthService";
 
 const TiresIndex = () => {
     // Tipando o estado com a interface ITires[]
@@ -18,6 +19,7 @@ const TiresIndex = () => {
 
     const fetchTires = async () => {
         try {
+            const authUser = AuthService.getUser().id;
             const response = await TiresService.getAll(page, limit, filters);
             setTires(response.data.data);
             setTotalPages(response.data.totalPages);
@@ -39,7 +41,7 @@ const TiresIndex = () => {
             ToastService.success("Pneu excluído com sucesso!");
             await fetchTires()
         } catch (error) {
-            ToastService.error("Erro ao excluir pneu!")
+            ToastService.error(error.response.data.details)
         }
     };
 

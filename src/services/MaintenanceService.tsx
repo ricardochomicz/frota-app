@@ -30,7 +30,6 @@ const MaintenanceService = {
     },
 
     update(id, data) {
-
         return api.put(`/api/maintenances/${id}/edit`, data)
     },
 

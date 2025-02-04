@@ -10,22 +10,27 @@ interface VehicleOption {
 interface Props {
     onSelect: (vehicleId: number) => void;
     onMileageChange: (mileage: number) => void;
+    vehicleId?: number;
+    defaultVehicleId?: number;
 }
 
-const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange }) => {
+const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId, defaultVehicleId }) => {
     const [vehicles, setVehicles] = useState<VehicleOption[]>([]);
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleOption | null>(null);
 
     const fetchVehicles = async () => {
         try {
             const response = await VehicleService.getAllVehiclesToSelect();
-            console.log(response.data)
             if (response) {
                 const options = response.data.map((vehicle: any) => ({
                     value: vehicle.id,
                     label: `${vehicle.license_plate} - ${vehicle.brand} ( ${vehicle.model} )`,
                 }));
                 setVehicles(options);
+
+                const preselectedVehicle = options.find(vehicle => vehicle.value === vehicleId);
+                setSelectedVehicle(preselectedVehicle || null);
+
             }
         } catch (error) {
             console.error("Erro ao buscar veículos:", error);
@@ -33,7 +38,14 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange }) => {
     };
     useEffect(() => {
         fetchVehicles();
-    }, []);
+    }, [vehicleId]);
+
+    useEffect(() => {
+        if (defaultVehicleId) {
+            const preselectedVehicle = vehicles.find(vehicle => vehicle.value === defaultVehicleId);
+            setSelectedVehicle(preselectedVehicle || null);
+        }
+    }, [vehicleId, vehicles]);
 
 
 
@@ -46,7 +58,6 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange }) => {
 
             // Fetch de detalhes do veículo selecionado para obter o mileage
             const vehicleDetails = await VehicleService.get(selected.value);
-            console.log(vehicleDetails?.data.data.mileage)
 
             // Chama o onMileageChange passando o mileage do veículo
             if (vehicleDetails?.data.data.mileage) {

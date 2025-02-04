@@ -2,8 +2,10 @@ import api from "../Api";
 import { ITires } from "../interfaces/TiresInterface";
 import { AuthService } from "../services/auth/AuthService";
 
+const authUser = AuthService.getUser().id;
 
 const TiresService = {
+
     create(data: ITires) {
 
         data.user_id = AuthService.getUser().id;
@@ -16,9 +18,12 @@ const TiresService = {
         const params = new URLSearchParams({
             page: String(page),
             limit: String(limit),
+
             ...(filters.code ? { code: filters.code } : {}),
             ...(filters.brand ? { brand: filters.brand } : {}),
-            ...(filters.model ? { model: filters.model } : {})
+            ...(filters.model ? { model: filters.model } : {}),
+
+
         });
 
         return api.get(`/api/tires?${params.toString()}`);

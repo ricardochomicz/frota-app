@@ -39,9 +39,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));  // Carrega o usuário do localStorage
-        } else {
-            localStorage.removeItem('user');
-            // window.location.href = "/login"
         }
     }, []);
 

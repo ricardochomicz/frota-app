@@ -6,30 +6,68 @@ import FormMaintenance from "./_partials/FormMaintenance"
 import { ToastService } from '../../services/common/ToastService';
 import { IMaintenance } from '../../interfaces/MaintenanceInterface';
 import MaintenanceService from '../../services/MaintenanceService';
-import { maintenanceSchema } from '../../validations/MaintenanceSchema';
+import VehicleTiresService from '../../services/VehicleTiresService';
+import { AuthService } from '../../services/auth/AuthService';
+import moment from 'moment';
 
 
 const MaintenanceCreate = () => {
-
+    const [newTires, setNewTires] = useState([]);
+    const [vehicleId, setVehicleId] = useState<number | null>(null);
     const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<IMaintenance>({ resolver: yupResolver(maintenanceSchema) });
+    } = useForm<IMaintenance>();
+
+    const handleVehicleIdChange = (id: number) => {
+        console.log("ID do veículo selecionado:", id);
+        setVehicleId(id);
+    };
+
+    const handleSaveNewTires = async (tires) => {
+        if (tires.length === 0) {
+            console.log("Nenhum pneu para salvar.");
+            return;
+        }
+        const tiresData = tires.map(tire => ({
+            vehicle_id: vehicleId,
+            tire_id: tire.id,
+            user_id: AuthService.getUser().id,
+            installation_date: moment(tire.installation_date).format('YYYY-MM-DD'),
+            mileage_at_installation: tire.mileage_at_installation,
+            predicted_replacement_mileage: tire.predicted_replacement_mileage,
+        }));
+
+        await VehicleTiresService.create(tiresData);
+    };
 
     const onSubmit: SubmitHandler<IMaintenance> = async (data) => {
-        console.log(data)
-        try {
-            const res = await MaintenanceService.create(data);
-
-            ToastService.success(res.data.message);
-            navigate('/api/maintenances');
-        } catch (error: any) {
-            console.log(error.response?.data.details[0].message);
-            ToastService.error(error.response?.data.details[0].message);
+        if (!vehicleId) {
+            console.error("Veículo não selecionado");
+            return;
         }
+        await handleSaveNewTires(newTires);
+
+        const payload = {
+            vehicle_id: vehicleId,
+            user_id: AuthService.getUser().id,
+            type: data.type,
+            description: data.description,
+            mileage_at_maintenance: data.mileage_at_maintenance,
+        };
+
+        console.log("Enviando manutenção:", payload);
+        const res = await MaintenanceService.create(payload);
+
+        ToastService.success(res.data.message);
+        navigate('/api/maintenances');
     };
+
+
+
     return (
         <FormMaintenance
             handleSubmit={handleSubmit(onSubmit)}
@@ -37,8 +75,11 @@ const MaintenanceCreate = () => {
             register={register}
             errors={errors}
             textForm="Nova Manutenção"
-            isSubmitting={isSubmitting} />
-    )
+            isSubmitting={isSubmitting}
+            onVehicleIdChange={handleVehicleIdChange}
+            onNewTiresChange={setNewTires} // Passa a função para atualizar os novos pneus
+        />
+    );
 }
 
-export default MaintenanceCreate
+export default MaintenanceCreate;

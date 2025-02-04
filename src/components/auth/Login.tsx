@@ -33,7 +33,6 @@ const Login: React.FC = () => {
             // retorna os dados do usuário autenticado
             login({ ...res.user, id: res.user.id.toString() });
 
-            ToastService.success('Login realizado com sucesso');
             navigate('/api/vehicles');
         } catch (error: any) {
             ToastService.error(error.message || 'Erro ao fazer login');

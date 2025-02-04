@@ -1,18 +1,100 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import VehicleToSelect from '../../vehicles/VehicleToSelect';
+import VehicleTiresService from '../../../services/VehicleTiresService';
+import TireItem from './TireItem';
+import NewTireForm from './NewTireItem';
+import { useForm } from 'react-hook-form';
+import { ToastService } from '../../../services/common/ToastService';
 
-const FormMaintenance = ({ handleSubmit, buttonText, register, errors, isSubmitting, textForm }) => {
-    const [vehicle, setVehicle] = useState(null);
-    const [vehicleId, setVehicleId] = useState(null);
+const FormMaintenance = ({
+    handleSubmit,
+    buttonText,
+    register,
+    errors,
+    isSubmitting,
+    textForm,
+    onNewTiresChange,
+    onVehicleIdChange,
+    defaultVehicleId,
+    tires
+}) => {
+
+    const { setValue } = useForm()
+    const { id } = useParams<{ id: string }>();
+    const [vehicleId, setVehicleId] = useState<number | null>(null);
     const [mileage, setMileage] = useState<number | null>(null);
+    const [vtires, setTires] = useState(tires || []);
+    const [newTires, setNewTires] = useState([{ code: '', brand: '', model: '' }]);
+    const [showInputs, setShowInputs] = useState(false);
+
 
     const handleMileageChange = (newMileage: number) => {
         setMileage(newMileage);
     };
 
+    useEffect(() => {
+        console.log("🔧 Pneus recebidos no FormMaintenance:", tires);
+        if (vehicleId && Array.isArray(tires) && tires.length === 0) {
+            VehicleTiresService.getTiresByVehicle(vehicleId)
+                .then(result => {
+                    console.log(result);
+                    setTires(result.data.data);
+                });
+        }
+    }, [vehicleId]);
+
+    const handleAddNewTire = () => {
+        setShowInputs(!showInputs);
+        if (!showInputs) {
+            const updatedNewTires = [...newTires, { code: '', brand: '', model: '' }];
+            setNewTires(updatedNewTires);
+            onNewTiresChange(updatedNewTires); // Passa os novos pneus para o componente pai
+        }
+    };
+
+    const handleTireChange = (index, field, value) => {
+        const updatedTires = [...newTires];
+        updatedTires[index][field] = value;
+        setNewTires(updatedTires);
+        onNewTiresChange(updatedTires); // Passa os novos pneus para o componente pai
+    };
+
+    const handleRemoveTire = async (index, isNew) => {
+        if (isNew) {
+            const updatedNewTires = newTires.filter((_, i) => i !== index);
+            setNewTires(updatedNewTires);
+            onNewTiresChange(updatedNewTires); // Passa os novos pneus para o componente pai
+        } else {
+            const tireToRemove = tires[index];
+            if (tireToRemove && tireToRemove.id) {
+                try {
+                    // Chame o serviço para remover o pneu do banco, passando o `tire_id`
+                    await VehicleTiresService.destroy(tireToRemove.tire_id);
+
+                    ToastService.success("Pneu removido com sucesso!");
+
+                    // Após a remoção no banco, atualize o estado local
+                    const updatedTires = tires.filter(tire => tire.tire_id !== tireToRemove.tire_id);
+                    setTires(updatedTires);
+                } catch (error) {
+                    console.error("Erro ao remover pneu:", error);
+                    // Aqui você pode adicionar um tratamento de erro (ex: mostrar mensagem de erro ao usuário)
+                }
+            } else {
+                console.error("Pneu não encontrado para remoção");
+            }
+        }
+    };
+
+    const handleVehicleSelect = (id) => {
+        setVehicleId(id); // Atualiza o estado local
+        setValue('vehicle_id', id);
+        onVehicleIdChange(id); // Passa o vehicleId para o componente pai
+    };
+
     return (
-        <section className="bg-gray-50 dark:bg-gray-900 mt-10">
+        <section className="bg-gray-50 dark:bg-gray-900 mt-5">
             <div className="flex flex-col items-center justify-center px-6 mx-auto md:h-screen lg:py-0">
                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -23,39 +105,59 @@ const FormMaintenance = ({ handleSubmit, buttonText, register, errors, isSubmitt
                             <div className="flex flex-row space-x-4">
                                 <div className="flex-1">
                                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Placa do Veículo:</label>
-                                    <VehicleToSelect onSelect={setVehicleId}
-                                        onMileageChange={handleMileageChange}
-                                    />
+                                    <VehicleToSelect defaultVehicleId={defaultVehicleId}
+                                        onSelect={(id) => {
+                                            setValue('vehicle_id', id); // Atualiza o valor de vehicle_id no formulário
+                                            handleVehicleSelect(id); // Atualiza o estado local também, caso precise
+                                        }} onMileageChange={handleMileageChange} />
                                 </div>
                                 <div className="flex-1">
-                                    <label htmlFor="mileage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Atual</label>
-                                    <input type="text" value={mileage ?? ""}  {...register('mileage')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                    {errors.mileage && <p className="text-red-500 text-sm">{errors.mileage.message}</p>}
+                                    <label htmlFor="mileage_at_maintenance" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Atual</label>
+                                    <input type="text"  {...register('mileage_at_maintenance')} name='mileage_at_maintenance' className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    {errors.mileage_at_maintenance && <p className="text-red-500 text-sm">{errors.mileage_at_maintenance.message}</p>}
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-12 gap-4">
+                                <div className="col-span-12 sm:col-span-4">
+                                    <div>
+                                        <label htmlFor="type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo</label>
+                                        <input type="text" {...register('type')} name="type" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                        {errors.type && <p className="text-red-500 text-sm">{errors.type.message}</p>}
+                                    </div>
+                                </div>
+                                <div className="col-span-12 sm:col-span-8">
+                                    <div>
+                                        <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descrição</label>
+                                        <input type="text" {...register('description')} name="description" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                        {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+                                    </div>
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código</label>
-                                <input type="text" {...register('code')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                {errors.code && <p className="text-red-500 text-sm">{errors.code.message}</p>}
-                            </div>
-                            <div>
-                                <label htmlFor="brand" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Marca</label>
-                                <input type="text" {...register('brand')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                {errors.brand && <p className="text-red-500 text-sm">{errors.brand.message}</p>}
-                            </div>
-                            <div>
-                                <label htmlFor="model" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
-                                <input type="text" {...register('model')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                {errors.model && <p className="text-red-500 text-sm">{errors.model.message}</p>}
-                            </div>
-                            <div>
-                                <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Valor</label>
-                                <input type="text" {...register('price')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
-                            </div>
+                                <button
+                                    type="button"
+                                    onClick={handleAddNewTire}
+                                    className="px-4 py-3 mb-3 mt-3 text-sm font-medium text-white bg-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                >
+                                    Adicionar Novo Pneu
+                                </button>
 
+                                {(tires || []).map((tire, index) => (
+                                    <TireItem key={index} tire={tire} index={index} onRemove={() => handleRemoveTire(index, false)} />
+                                ))}
+
+                                {showInputs && newTires.map((tire, index) => (
+                                    <NewTireForm
+                                        key={index}
+                                        tire={tire}
+                                        index={index}
+                                        onChange={handleTireChange}
+                                        onRemove={() => handleRemoveTire(index, true)}
+                                    />
+                                ))}
+                            </div>
                             <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{buttonText}</button>
-                            <Link to="/api/tires" className="ms-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Voltar</Link>
+                            <Link to="/api/maintenances" className="ms-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Voltar</Link>
                         </form>
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import TireCreate from "../components/tires/TireCreate";
 import TireEdit from "../components/tires/TireEdit";
 import MaintenancesIndex from "../components/maintenances/MaintenancesIndex";
 import MaintenanceCreate from "../components/maintenances/MaintenanceCreate";
+import MaintenanceEdit from "../components/maintenances/MaintenanceEdit";
 
 const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional Component
     return (
@@ -26,6 +27,7 @@ const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional
             <Route path="/api/tires/:id/edit" element={<TireEdit />} />
             <Route path="/api/maintenances" element={<MaintenancesIndex />} />
             <Route path="/api/maintenances/create" element={<MaintenanceCreate />} />
+            <Route path="/api/maintenances/:id/edit" element={<MaintenanceEdit />} />
         </Routes>
     );
 };
