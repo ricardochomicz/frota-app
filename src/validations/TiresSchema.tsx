@@ -7,5 +7,4 @@ export const tiresSchema = yup.object().shape({
     price: yup
         .string()
         .required('Preço é obrigatório'),
-
 });

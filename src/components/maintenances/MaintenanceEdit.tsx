@@ -109,13 +109,8 @@ const MaintenanceEdit = () => {
 
         console.log("Enviando manutenção:", payload);
         try {
-            // Envia a manutenção para ser atualizada no banco
             const res = await MaintenanceService.update(id, payload);
-
-            // Exibe a mensagem de sucesso
             ToastService.success(res.data.message);
-
-            // Redireciona para a lista de manutenções
             navigate('/api/maintenances');
         } catch (error) {
             console.error("Erro ao atualizar manutenção:", error);

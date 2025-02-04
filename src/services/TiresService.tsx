@@ -7,22 +7,21 @@ const authUser = AuthService.getUser().id;
 const TiresService = {
 
     create(data: ITires) {
-
-        data.user_id = AuthService.getUser().id;
+        data.user_id = Number(authUser);
+        data.status = 'available';
         data.price = parseFloat(data.price.replace(/[^0-9.,]/g, '').replace(',', '.')).toString();
 
         return api.post('/api/tires', data)
     },
 
-    getAll(page: number, limit: number, filters: { code?: string; brand?: string; model?: string }) {
+    getAll(page: number, limit: number, filters: { code?: string; brand?: string; model?: string; status?: string }) {
         const params = new URLSearchParams({
             page: String(page),
             limit: String(limit),
-
             ...(filters.code ? { code: filters.code } : {}),
             ...(filters.brand ? { brand: filters.brand } : {}),
             ...(filters.model ? { model: filters.model } : {}),
-
+            ...(filters.status ? { status: filters.status } : {}),
 
         });
 
@@ -35,6 +34,7 @@ const TiresService = {
     },
 
     update(id, data) {
+        data.user_id = Number(authUser);
         data.price = parseFloat(data.price.replace(/[^0-9.,]/g, '').replace(',', '.')).toString();
         return api.put(`/api/tires/${id}/edit`, data)
     },

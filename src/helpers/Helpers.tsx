@@ -8,6 +8,16 @@ export const translateFuelType = (fuelType) => {
     return fuelTypeMap[fuelType] || fuelType;
 };
 
+export const translateStatusTires = (status) => {
+    const statusTypeMap = {
+        'available': 'Disponível',
+        'in use': 'Em Uso',
+        'lower': 'Baixado',
+    };
+    return statusTypeMap[status] || status;
+};
+
+
 export const handleInputChange = (e) => {
     let value = e.target.value.toUpperCase(); // Sempre em maiúsculas
     const regex = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/; // Suporta "AAA9999" e "AAA9A99"

@@ -5,6 +5,7 @@ export interface ITires {
     model: string
     price: string
     user_id?: number
+    status?: string;
     created_at?: string;
     updated_at?: string;
 }

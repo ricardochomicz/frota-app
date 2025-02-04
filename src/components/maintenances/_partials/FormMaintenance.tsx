@@ -48,7 +48,7 @@ const FormMaintenance = ({
         setShowInputs(!showInputs);
         if (!showInputs) {
             const updatedNewTires = [...newTires, { code: '', brand: '', model: '' }];
-            setNewTires(updatedNewTires);
+            // setNewTires(updatedNewTires);
             onNewTiresChange(updatedNewTires); // Passa os novos pneus para o componente pai
         }
     };
