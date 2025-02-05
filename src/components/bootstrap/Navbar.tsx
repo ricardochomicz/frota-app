@@ -2,11 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthService } from "../../services/auth/AuthService";
 import { useAuth } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NavBar = () => {
     const { authenticated, logout } = useAuth();
     const [user, setUser] = useState<any>(null);
     const navigate = useNavigate();
+
+    const notify = () => toast.info('🚨 Pneu do veículo ABC123 precisa ser trocado!', {
+        position: "top-right",
+        autoClose: 5000, // Tempo que a notificação fica visível
+        hideProgressBar: true, // Remove a barra de progresso
+        closeOnClick: true, // Fecha a notificação ao clicar
+        pauseOnHover: true, // Pausa quando o mouse passa por cima
+    });
 
     useEffect(() => {
 
@@ -58,6 +68,9 @@ const NavBar = () => {
                                 </li>
                                 <li>
                                     <Link to="/api/users" className="text-gray-900 dark:text-white hover:underline">Usuários</Link>
+                                </li>
+                                <li>
+                                    <button onClick={notify} className="text-gray-900 dark:text-white hover:underline">Verificar Pneus</button>
                                 </li>
                             </ul>
                         </div>

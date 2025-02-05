@@ -137,19 +137,19 @@ const TiresIndex = () => {
                                             {tire.model}
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            {tire.price}
+                                            R$ {tire.price}
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             {translateStatusTires(tire.status)}
                                         </td>
                                         <td className="px-2 py-4 text-center">
 
-                                            <Link to={`/api/tires/${tire.id}/edit`} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            <Link to={`/api/tires/${tire.id}/edit`} data-text="Editar" className="tooltips text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </Link>
 
 
-                                            <button type="button" onClick={() => handleDelete(tire.id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                            <button type="button" onClick={() => handleDelete(tire.id)} data-text="Excluir" className="tooltips text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
 

@@ -1,7 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
 function FormTires({ handleSubmit, buttonText, register, errors, isSubmitting, textForm, handleStatusChange }) {
+    function mascara(valor) {
+        var valorAlterado = valor.value;
+        valorAlterado = valorAlterado.replace(/\D/g, ""); // Remove todos os não dígitos
+        valorAlterado = valorAlterado.replace(/(\d+)(\d{2})$/, "$1.$2"); // Adiciona a parte de centavos
+        // valorAlterado = valorAlterado.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."); // Adiciona pontos a cada três dígitos
+        // valorAlterado = "R$" + valorAlterado;
+        valor.value = valorAlterado;
+        console.log(valorAlterado)
+    }
 
     return (
         <section className="bg-gray-50 dark:bg-gray-900 mt-5">
@@ -30,12 +40,16 @@ function FormTires({ handleSubmit, buttonText, register, errors, isSubmitting, t
                             </div>
                             <div>
                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Valor</label>
-                                <input type="text" {...register('price')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                <input type="text" onInput={(e) => mascara(e.target)}
+
+                                    {...register('price')} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
+
                                 {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
                             </div>
                             <div>
                                 <label className="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" {...register('status')} onChange={(e) => handleStatusChange(e)} value="" className="sr-only peer" />
+                                    <input type="checkbox" {...register('status')} onChange={(e) => handleStatusChange(e)} className="sr-only peer" />
                                     <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Baixar Pneu</span>
                                 </label>

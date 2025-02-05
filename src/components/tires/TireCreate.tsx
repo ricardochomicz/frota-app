@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import FormTires from './_partials/FormTires';
 import { tiresSchema } from '../../validations/TiresSchema';
 import TiresService from '../../services/TiresService';
@@ -15,7 +15,7 @@ const TireCreate = () => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<ITires>({ resolver: yupResolver(tiresSchema) });
+    } = useForm<ITires>({ resolver: zodResolver(tiresSchema) });
 
     const onSubmit: SubmitHandler<ITires> = async (data) => {
         console.log(data)

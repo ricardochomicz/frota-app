@@ -33,7 +33,7 @@ const Login: React.FC = () => {
             // retorna os dados do usuário autenticado
             login({ ...res.user, id: res.user.id.toString() });
 
-            navigate('/api/vehicles');
+            navigate('/api/maintenances');
         } catch (error: any) {
             ToastService.error(error.message || 'Erro ao fazer login');
         }

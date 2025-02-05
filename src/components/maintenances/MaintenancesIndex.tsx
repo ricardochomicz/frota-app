@@ -148,10 +148,10 @@ const MaintenancesIndex = () => {
                                         <td className="px-6 py-4 text-center">{maintenance.data_user.name}</td>
                                         <td className="px-6 py-4 text-center">{format(maintenance.updated_at, "dd/MM/yyyy")}</td>
                                         <td className="px-6 py-4 text-center">
-                                            <Link to={`/api/maintenances/${maintenance.id}/edit`} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            <Link to={`/api/maintenances/${maintenance.id}/edit`} data-text="Editar" className="tooltips text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </Link>
-                                            <button type="button" onClick={() => handleDelete(maintenance.id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                            <button type="button" onClick={() => handleDelete(maintenance.id)} data-text="Excluir" className="tooltips text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
                                         </td>
