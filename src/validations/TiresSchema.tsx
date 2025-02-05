@@ -1,10 +1,8 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const tiresSchema = yup.object().shape({
-    code: yup.string().required('Código é obrigatório'),
-    brand: yup.string().required('Marca é obrigatória'),
-    model: yup.string().required('Modelo é obrigatório'),
-    price: yup
-        .string()
-        .required('Preço é obrigatório'),
-});
+export const tiresSchema = z.object({
+    code: z.string({ message: 'O Codigo é obrigatório' }),
+    brand: z.string({ message: 'A Marca é obrigatória' }),
+    model: z.string({ message: 'O Modelo é obrigatório' }),
+    price: z.string({ message: 'Preço é obrigatório' })
+})

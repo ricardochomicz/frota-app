@@ -17,3 +17,52 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.tooltips {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltips:before {
+  content: attr(data-text);
+  position: absolute;
+  bottom: 80%;
+  margin-bottom: 15px;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 8px;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  display: none;
+}
+
+.tooltips:hover:before {
+  display: block;
+}
+
+.tooltips:after {
+  content: "";
+  position: absolute;
+
+  bottom: 90%;
+  margin-bottom: 6px;
+
+  left: calc(50% - 10px);
+  transform: translateX(-50%);
+  rotate: 270deg;
+
+  border: 10px solid;
+  border-color: transparent black transparent transparent;
+
+  display: none;
+}
+
+.tooltips:hover:before,
+.tooltips:hover:after {
+  display: block;
+}

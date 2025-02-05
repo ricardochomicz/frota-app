@@ -17,6 +17,14 @@ export const translateStatusTires = (status) => {
     return statusTypeMap[status] || status;
 };
 
+export const translateRoleUser = (role) => {
+    const roleTypeMap = {
+        'admin': 'Admin',
+        'user': 'Usuário',
+    };
+    return roleTypeMap[role] || role;
+};
+
 
 export const handleInputChange = (e) => {
     let value = e.target.value.toUpperCase(); // Sempre em maiúsculas

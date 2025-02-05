@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import FormMaintenance from "./_partials/FormMaintenance"
 import { ToastService } from '../../services/common/ToastService';
 import { IMaintenance } from '../../interfaces/MaintenanceInterface';
@@ -27,7 +26,7 @@ const MaintenanceCreate = () => {
         setVehicleId(id);
     };
 
-    const handleSaveNewTires = async (tires) => {
+    const handleSaveNewTires = async (tires, maintenance_id) => {
         if (tires.length === 0) {
             console.log("Nenhum pneu para salvar.");
             return;
@@ -39,6 +38,7 @@ const MaintenanceCreate = () => {
             installation_date: moment(tire.installation_date).format('YYYY-MM-DD'),
             mileage_at_installation: tire.mileage_at_installation,
             predicted_replacement_mileage: tire.predicted_replacement_mileage,
+            maintenance_id: maintenance_id
         }));
 
         await VehicleTiresService.create(tiresData);
@@ -49,7 +49,6 @@ const MaintenanceCreate = () => {
             console.error("Veículo não selecionado");
             return;
         }
-        await handleSaveNewTires(newTires);
 
         const payload = {
             vehicle_id: vehicleId,
@@ -61,6 +60,10 @@ const MaintenanceCreate = () => {
 
         console.log("Enviando manutenção:", payload);
         const res = await MaintenanceService.create(payload);
+        console.log(res.data.data.id)
+
+        // Chamar handleSaveNewTires com o ID da manutenção
+        await handleSaveNewTires(newTires, res.data.data.id);
 
         ToastService.success(res.data.message);
         navigate('/api/maintenances');

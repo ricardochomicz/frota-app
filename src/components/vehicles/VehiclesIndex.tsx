@@ -5,21 +5,23 @@ import { ToastService } from "../../services/common/ToastService";
 import { IVehicle } from "../../interfaces/VehicleInterface";
 import { translateFuelType } from "../../helpers/Helpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faTachometerAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { InputMask } from '@react-input/mask';
+import VehicleUpdateMileage from './VehicleUpdateMileage'
 
 const VehiclesIndex = () => {
-    // Tipando o estado com a interface IVehicle[]
     const [vehicles, setVehicles] = useState<IVehicle[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [filters, setFilters] = useState({ license_plate: "", brand: "", model: "" });
+    const [selectedVehicleId, setSelectedVehicleId] = useState<number | null>(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const limit = 5
 
     const fetchVehicles = async () => {
-        // setLoading(true)
+        setLoading(true)
         try {
             const response = await VehicleService.getAll(page, limit, filters);
             setVehicles(response.data.data);
@@ -28,7 +30,7 @@ const VehiclesIndex = () => {
             setError("Erro ao carregar os veículos");
             ToastService.error("Erro ao carregar veículos.");
         } finally {
-            setLoading(false); // Sempre execute isso após o processo
+            setLoading(false);
         }
 
     };
@@ -48,7 +50,34 @@ const VehiclesIndex = () => {
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
-        setPage(1); // Reinicia a paginação ao filtrar
+        setPage(1);
+    };
+
+    const handleUpdateKm = (vehicleId: number) => {
+        setIsDrawerOpen(true);
+        setSelectedVehicleId(vehicleId);
+    };
+
+    const handleSaveMileage = async (mileage: number) => {
+        if (selectedVehicleId !== null) {
+            console.log(`Salvar KM ${mileage} para o veículo ${selectedVehicleId}`);
+            const id = Number(selectedVehicleId);
+            const data = {
+                id: selectedVehicleId,
+                mileage: mileage
+            }
+            try {
+                await VehicleService.updateMileage(data);
+                ToastService.success(`Km atualizado com sucesso.`);
+            } catch (error) {
+                ToastService.error(`Erro ao autualizar Km.`);
+            }
+        }
+        setIsDrawerOpen(false);
+    };
+
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false);
     };
 
     if (error) {
@@ -112,7 +141,7 @@ const VehiclesIndex = () => {
                                     <th scope="col" className="px-6 py-3">Modelo</th>
                                     <th scope="col" className="px-6 py-3 text-center">Ano</th>
                                     <th scope="col" className="px-6 py-3 text-center">Placa</th>
-                                    <th scope="col" className="px-6 py-3 text-center">...</th>
+                                    <th scope="col" className="px-3 py-1 text-center">...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,19 +157,33 @@ const VehiclesIndex = () => {
                                         </td>
                                         <td className="px-6 py-4 text-center">{vehicle.year}</td>
                                         <td className="px-6 py-4 text-center">{vehicle.license_plate}</td>
-                                        <td className="px-6 py-4 text-center">
-                                            <Link to={`/api/vehicle/${vehicle.id}/edit`} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                        <td className="text-center">
+                                            <Link to={`/api/vehicle/${vehicle.id}/edit`} data-text="Editar" className="tooltips text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </Link>
-                                            <button type="button" onClick={() => handleDelete(vehicle.id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                            <button type="button" onClick={() => handleDelete(vehicle.id)} data-text="Remover" className="tooltips text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                 <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                            <button type="button" onClick={() => handleUpdateKm(Number(vehicle.id))} data-text="Atualizar KM" className="tooltips text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">
+                                                <FontAwesomeIcon icon={faTachometerAlt} />
                                             </button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+
+                        {selectedVehicleId !== null && (
+                            <VehicleUpdateMileage
+                                vehicleId={selectedVehicleId}
+                                onSave={handleSaveMileage}
+                                isOpen={isDrawerOpen}
+                                onClose={handleCloseDrawer}
+                            />
+                        )}
+
                     </div>
+
                 )
             }
             <div className="flex pt-2 pb-2">

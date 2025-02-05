@@ -17,13 +17,14 @@ const FormMaintenance = ({
     onNewTiresChange,
     onVehicleIdChange,
     defaultVehicleId,
+    defaultMileage,
     tires
 }) => {
 
     const { setValue } = useForm()
     const { id } = useParams<{ id: string }>();
     const [vehicleId, setVehicleId] = useState<number | null>(null);
-    const [mileage, setMileage] = useState<number | null>(null);
+    const [mileage, setMileage] = useState<number | null>(defaultMileage || null);
     const [vtires, setTires] = useState(tires || []);
     const [newTires, setNewTires] = useState([{ code: '', brand: '', model: '' }]);
     const [showInputs, setShowInputs] = useState(false);
@@ -31,12 +32,14 @@ const FormMaintenance = ({
 
     const handleMileageChange = (newMileage: number) => {
         setMileage(newMileage);
+        setValue('mileage', newMileage);
     };
 
     useEffect(() => {
-        console.log("🔧 Pneus recebidos no FormMaintenance:", tires);
+        setValue('mileage', mileage)
+        console.log("Pneus recebidos no FormMaintenance:", tires);
         if (vehicleId && Array.isArray(tires) && tires.length === 0) {
-            VehicleTiresService.getTiresByVehicle(vehicleId)
+            VehicleTiresService.getTiresByVehicleId(vehicleId)
                 .then(result => {
                     console.log(result);
                     setTires(result.data.data);
@@ -63,20 +66,25 @@ const FormMaintenance = ({
     const handleRemoveTire = async (index, isNew) => {
         if (isNew) {
             const updatedNewTires = newTires.filter((_, i) => i !== index);
-            setNewTires(updatedNewTires);
             onNewTiresChange(updatedNewTires); // Passa os novos pneus para o componente pai
         } else {
             const tireToRemove = tires[index];
             if (tireToRemove && tireToRemove.id) {
+                console.log(tireToRemove);
                 try {
-                    // Chame o serviço para remover o pneu do banco, passando o `tire_id`
-                    await VehicleTiresService.destroy(tireToRemove.tire_id);
+
+                    const data = {
+                        tire_id: tireToRemove.tire_id,
+                        mileage_to_replace: mileage
+                    }
+                    console.log(data)
+                    await VehicleTiresService.removeTireToReplace(tireToRemove.id, data)
 
                     ToastService.success("Pneu removido com sucesso!");
 
                     // Após a remoção no banco, atualize o estado local
                     const updatedTires = tires.filter(tire => tire.tire_id !== tireToRemove.tire_id);
-                    setTires(updatedTires);
+                    onNewTiresChange(updatedTires);
                 } catch (error) {
                     console.error("Erro ao remover pneu:", error);
                     // Aqui você pode adicionar um tratamento de erro (ex: mostrar mensagem de erro ao usuário)
@@ -112,9 +120,9 @@ const FormMaintenance = ({
                                         }} onMileageChange={handleMileageChange} />
                                 </div>
                                 <div className="flex-1">
-                                    <label htmlFor="mileage_at_maintenance" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Atual</label>
-                                    <input type="text"  {...register('mileage_at_maintenance')} name='mileage_at_maintenance' className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                    {errors.mileage_at_maintenance && <p className="text-red-500 text-sm">{errors.mileage_at_maintenance.message}</p>}
+                                    <label htmlFor="mileage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Atual</label>
+                                    <input type="text" value={mileage}  {...register('mileage')} name='mileage' className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    {errors.mileage && <p className="text-red-500 text-sm">{errors.mileage.message}</p>}
                                 </div>
                             </div>
                             <div className="grid grid-cols-12 gap-4">

@@ -2,12 +2,10 @@ import api from "../Api";
 import { ITires } from "../interfaces/TiresInterface";
 import { AuthService } from "../services/auth/AuthService";
 
-const authUser = AuthService.getUser().id;
 
 const TiresService = {
 
     create(data: ITires) {
-        data.user_id = Number(authUser);
         data.status = 'available';
         data.price = parseFloat(data.price.replace(/[^0-9.,]/g, '').replace(',', '.')).toString();
 
@@ -34,7 +32,6 @@ const TiresService = {
     },
 
     update(id, data) {
-        data.user_id = Number(authUser);
         data.price = parseFloat(data.price.replace(/[^0-9.,]/g, '').replace(',', '.')).toString();
         return api.put(`/api/tires/${id}/edit`, data)
     },

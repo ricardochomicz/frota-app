@@ -5,7 +5,11 @@ import { AuthService } from "../services/auth/AuthService";
 
 const VehicleService = {
     create(data: IVehicle) {
-        data.user_id = Number(AuthService.getUser());
+        const authUser = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!authUser || !authUser.id) {
+            throw new Error('Usuário não autenticado');
+        }
+
         data.mileage = parseFloat(String(data.mileage));
         data.license_plate = data.license_plate.toUpperCase();
         return api.post('/api/vehicles', data)
@@ -27,7 +31,7 @@ const VehicleService = {
         return api.get(`/api/vehicles/${id}`)
     },
 
-    update(id, data) {
+    update(id: number, data) {
         return api.put(`/api/vehicles/${id}/edit`, data)
     },
 
@@ -38,6 +42,10 @@ const VehicleService = {
 
     getAllVehiclesToSelect() {
         return api.get(`/api/to-select`);
+    },
+
+    updateMileage(data) {
+        return api.put(`/api/vehicles/mileage`, data)
     }
 };
 

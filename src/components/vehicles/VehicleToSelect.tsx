@@ -58,6 +58,7 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
 
             // Fetch de detalhes do veículo selecionado para obter o mileage
             const vehicleDetails = await VehicleService.get(selected.value);
+            console.log(vehicleDetails)
 
             // Chama o onMileageChange passando o mileage do veículo
             if (vehicleDetails?.data.data.mileage) {

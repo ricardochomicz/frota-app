@@ -127,7 +127,7 @@ const MaintenancesIndex = () => {
                                     <th scope="col" className="px-6 py-3">#</th>
                                     <th scope="col" className="px-6 py-3">Tipo</th>
                                     <th scope="col" className="px-6 py-3">Veículo</th>
-                                    <th scope="col" className="px-6 py-3 text-center">Próxima Manutenção</th>
+                                    <th scope="col" className="px-6 py-3 text-center">KM Atual</th>
                                     <th scope="col" className="px-6 py-3 text-center">Lançado por</th>
                                     <th scope="col" className="px-6 py-3 text-center">Data</th>
                                     <th scope="col" className="px-6 py-3 text-center">...</th>
@@ -145,8 +145,8 @@ const MaintenancesIndex = () => {
                                             <small>{maintenance.vehicle.license_plate}</small>
                                         </td>
                                         <td className="px-6 py-4 text-center">{maintenance.mileage_at_maintenance} Km</td>
-                                        <td className="px-6 py-4 text-center">{maintenance.user.name}</td>
-                                        <td className="px-6 py-4 text-center">{format(maintenance.created_at, "dd/MM/yyyy")}</td>
+                                        <td className="px-6 py-4 text-center">{maintenance.data_user.name}</td>
+                                        <td className="px-6 py-4 text-center">{format(maintenance.updated_at, "dd/MM/yyyy")}</td>
                                         <td className="px-6 py-4 text-center">
                                             <Link to={`/api/maintenances/${maintenance.id}/edit`} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 <FontAwesomeIcon icon={faEdit} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import VehicleTiresService from '../../../services/VehicleTiresService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faUnlink } from '@fortawesome/free-solid-svg-icons';
 import { ToastService } from '../../../services/common/ToastService';
 
 interface NewTireFormProps {
@@ -33,6 +33,7 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
         try {
             const response = await VehicleTiresService.getTireInfoByCode(code);
             const result = response.data;
+            console.log(result)
             if (result.data) {
                 onChange(index, 'id', result.data.id);
                 onChange(index, 'mileage_at_installation', result.data.mileage_at_installation);
@@ -41,7 +42,7 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
                 onChange(index, 'model', result.data.model);
             }
         } catch (error) {
-            console.error(error);
+            console.error(error.response.data);
             ToastService.error(error.response.data.error);
             setCode("");
         }
@@ -87,7 +88,7 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
                     <input
                         type="text"
 
-                        onChange={(e) => onChange(index, 'mileage_at_installation', e.target.value)}
+                        onChange={(e) => onChange(index, 'mileage_at_installation', e.target.value)} value={tire.mileage_at_installation}
                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                 </div>
@@ -102,10 +103,11 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
             <div className="col-span-12 sm:col-span-1">
                 <button
                     type="button"
+                    data-text="Remover Pneu"
                     onClick={() => onRemove(index)}
-                    className="mt-7 px-4 py-3 text-sm font-medium text-white bg-red-500 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    className="tooltips mt-7 px-4 py-3 text-sm font-medium text-white bg-red-500 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                 >
-                    <FontAwesomeIcon icon={faTrash} />
+                    <FontAwesomeIcon icon={faUnlink} />
                 </button>
             </div>
         </div>

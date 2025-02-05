@@ -15,6 +15,7 @@ const MaintenanceEdit = () => {
     const [tires, setTires] = useState([]);
     const [newTires, setNewTires] = useState([{ code: '', brand: '', model: '' }]);
     const [maintenances, setMaintenances] = useState<IMaintenance | null>(null);
+
     const navigate = useNavigate();
     const {
         register,
@@ -28,20 +29,23 @@ const MaintenanceEdit = () => {
         const fetchMaintenance = async () => {
             if (!id) throw new Error('ID da manutenção não encontrado');
             const response = await MaintenanceService.get(id);
+
             const data: IMaintenance = response.data.data;
             setValue('type', data.type);
             setValue('description', data.description);
             setValue('vehicle_id', data.vehicle_id);
-            setValue('mileage_at_maintenance', data.mileage_at_maintenance);
+            setValue('mileage', data.mileage);
+            setValue('mileage_at_maintenance', data.mileage)
 
             setVehicleId(data.vehicle_id);
 
             try {
-                const tiresResponse = await VehicleTiresService.getTiresByVehicle(data.vehicle_id);
-                console.log("🚗 Pneus recebidos:", tiresResponse.data.data); // <-- Veja no console se os pneus estão vindo corretamente
+                const tiresResponse = await VehicleTiresService.getVehicleTiresForMaintenance(data.vehicle_id, Number(id));
+                console.log(tiresResponse)
+                console.log("Pneus recebidos:", tiresResponse.data.data);
                 setTires(tiresResponse.data.data);
             } catch (error) {
-                console.error("❌ Erro ao buscar pneus:", error);
+                console.error("Erro ao buscar pneus:", error);
             }
 
         }
@@ -49,8 +53,7 @@ const MaintenanceEdit = () => {
     }, [id, setValue]);
 
 
-    const handleAddTiresChange = async (tires) => {
-
+    const handleAddTiresChange = async (tires, maintenance_id) => {
         if (tires.length === 0) {
             console.log("Nenhum pneu para salvar.");
             return;
@@ -60,7 +63,7 @@ const MaintenanceEdit = () => {
             console.error("Veículo nao selecionado");
             return
         }
-        const existingTires = await VehicleTiresService.getTiresByVehicle(vehicleId);
+        const existingTires = await VehicleTiresService.getVehicleTiresForMaintenance(vehicleId, Number(id));
 
         console.log("Pneus já existentes:", existingTires);
         // Filtra pneus novos que não existem no banco
@@ -70,8 +73,8 @@ const MaintenanceEdit = () => {
 
         const tiresData = newTires.map(tire => {
             if (!tire.id) {
-                console.error("Erro: tire.id é undefined");
-                return null; // Retorna null se não tiver um id válido
+                console.error("Erro: tire.id é indefinido");
+                return null;
             }
             return {
                 vehicle_id: vehicleId,
@@ -80,6 +83,8 @@ const MaintenanceEdit = () => {
                 installation_date: moment(tire.installation_date).format('YYYY-MM-DD'),
                 mileage_at_installation: tire.mileage_at_installation,
                 predicted_replacement_mileage: tire.predicted_replacement_mileage,
+                maintenance_id: maintenance_id
+
             };
         }).filter(tire => tire !== null);
 
@@ -97,8 +102,6 @@ const MaintenanceEdit = () => {
             console.error("Veículo não selecionado");
             return;
         }
-        await handleAddTiresChange(newTires);
-
         const payload = {
             vehicle_id: vehicleId,
             user_id: Number(AuthService.getUser().id),
@@ -110,6 +113,7 @@ const MaintenanceEdit = () => {
         console.log("Enviando manutenção:", payload);
         try {
             const res = await MaintenanceService.update(id, payload);
+            await handleAddTiresChange(newTires, id);
             ToastService.success(res.data.message);
             navigate('/api/maintenances');
         } catch (error) {
@@ -138,6 +142,7 @@ const MaintenanceEdit = () => {
             onNewTiresChange={handleNewTiresChange}
             onVehicleIdChange={setVehicleId}// Preenchendo o formulário com os dados da manutenção
             defaultVehicleId={vehicleId}
+
             tires={tires || []}
         />
     );

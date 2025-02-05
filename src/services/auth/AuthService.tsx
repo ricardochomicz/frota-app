@@ -1,5 +1,6 @@
 import axios from 'axios';
 import api from '../../Api';
+import { IUser } from '../../interfaces/UserInterface';
 
 
 const API_URL = 'http://localhost:5000';
@@ -8,6 +9,7 @@ interface UserData {
     name: string;
     email: string;
     password_hash: string;
+    role: string;
 }
 
 interface Credentials {
@@ -30,7 +32,8 @@ export const AuthService = {
 
     async register(userData: UserData): Promise<AuthResponse> {
         try {
-            const response = await axios.post<AuthResponse>(`${API_URL}/register`, userData);
+            const response = await api.post(`${API_URL}/register`, userData);
+
             return response.data;
         } catch (error: any) {
             throw error.response?.data || { error: 'Erro ao registrar usuário' };
@@ -82,8 +85,8 @@ export const AuthService = {
     },
 
     getUser() {
-        const userString = localStorage.getItem('user');
-        return userString ? JSON.parse(userString) : null;
+        const user = localStorage.getItem('user');
+        return user ? JSON.parse(user) : null;
     },
 
     removeToken(): void {

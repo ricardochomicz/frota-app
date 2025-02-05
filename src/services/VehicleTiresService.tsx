@@ -10,8 +10,12 @@ const VehicleTiresService = {
         return api.get(`/api/vehicle-tires/${id}`)
     },
 
-    getTiresByVehicle(vehicle_id: number) {
+    getTiresByVehicleId(vehicle_id: number) {
         return api.get(`/api/vehicle-tires/${vehicle_id}`)
+    },
+
+    getVehicleTiresForMaintenance(vehicle_id: number, maintenance_id: number) {
+        return api.get(`/api/vehicle-tires/${vehicle_id}/maintenance/${maintenance_id}/tires`)
     },
 
     addNewTires(vehicle_id: number, tires: any) {
@@ -24,6 +28,10 @@ const VehicleTiresService = {
 
     destroy(id) {
         return api.delete(`/api/vehicle-tires/${id}/delete`)
+    },
+
+    removeTireToReplace(id: number, data) {
+        return api.put(`/api/vehicle-tires/${id}/remove-to-replace`, data);
     }
 }
 
