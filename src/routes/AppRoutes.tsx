@@ -15,6 +15,8 @@ import MaintenanceEdit from "../components/maintenances/MaintenanceEdit";
 import UsersIndex from "../components/users/UserIndex";
 import UserCreate from "../components/users/UserCreate";
 import UserEdit from "../components/users/UserEdit";
+import CostAnalysisCreate from "../components/cost_analysis/CostAnalysisCreate";
+import CostAnalysisIndex from "../components/cost_analysis/CostAnalysisIndex";
 
 const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional Component
     return (
@@ -34,6 +36,8 @@ const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional
             <Route path="/api/users" element={<UsersIndex />} />
             <Route path="/api/user/create" element={<UserCreate />} />
             <Route path="/api/user/:id/edit" element={<UserEdit />} />
+            <Route path="/api/cost-analysis" element={<CostAnalysisIndex />} />
+            <Route path="/api/cost-analysis/maintenance/:maintenance_id/tire/:tire_id" element={<CostAnalysisCreate />} />
         </Routes>
     );
 };

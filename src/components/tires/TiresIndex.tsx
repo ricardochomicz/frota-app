@@ -61,7 +61,6 @@ const TiresIndex = () => {
     }
 
     return (
-
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
             <div className="flex justify-between items-center mb-4">
                 <Link to="/api/tires/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novo Pneu</Link>
@@ -140,7 +139,8 @@ const TiresIndex = () => {
                                             R$ {tire.price}
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            {translateStatusTires(tire.status)}
+                                            {translateStatusTires(tire.status)}<br />
+                                            <small>{tire.license_plate}</small>
                                         </td>
                                         <td className="px-2 py-4 text-center">
 

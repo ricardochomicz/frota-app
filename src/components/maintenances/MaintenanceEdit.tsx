@@ -41,7 +41,6 @@ const MaintenanceEdit = () => {
 
             try {
                 const tiresResponse = await VehicleTiresService.getVehicleTiresForMaintenance(data.vehicle_id, Number(id));
-                console.log(tiresResponse)
                 console.log("Pneus recebidos:", tiresResponse.data.data);
                 setTires(tiresResponse.data.data);
             } catch (error) {
@@ -51,6 +50,8 @@ const MaintenanceEdit = () => {
         }
         fetchMaintenance()
     }, [id, setValue]);
+
+
 
 
     const handleAddTiresChange = async (tires, maintenance_id) => {
@@ -129,22 +130,21 @@ const MaintenanceEdit = () => {
         setNewTires(updatedNewTires);
     };
 
-
-
     return (
-        <FormMaintenance
-            handleSubmit={handleSubmit(onSubmit)}
-            buttonText="Salvar"
-            register={register} // Seu método de registrar os campos
-            errors={{}} // Suas mensagens de erro
-            isSubmitting={false}
-            textForm="Editar Manutenção"
-            onNewTiresChange={handleNewTiresChange}
-            onVehicleIdChange={setVehicleId}// Preenchendo o formulário com os dados da manutenção
-            defaultVehicleId={vehicleId}
-
-            tires={tires || []}
-        />
+        <div>
+            <FormMaintenance
+                handleSubmit={handleSubmit(onSubmit)}
+                buttonText="Salvar"
+                register={register} // Seu método de registrar os campos
+                errors={{}} // Suas mensagens de erro
+                isSubmitting={false}
+                textForm="Editar Manutenção"
+                onNewTiresChange={handleNewTiresChange}
+                onVehicleIdChange={setVehicleId}// Preenchendo o formulário com os dados da manutenção
+                defaultVehicleId={vehicleId}
+                tires={tires || []}
+            />
+        </div>
     );
 };
 

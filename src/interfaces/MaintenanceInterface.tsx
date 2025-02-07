@@ -4,6 +4,7 @@ export interface IMaintenance {
     user_id?: number;
     type: string;
     description: string;
+    status?: string;
     mileage_at_maintenance: number;
     date?: Date;
     created_at?: string;

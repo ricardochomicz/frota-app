@@ -37,6 +37,7 @@ const TiresEdit = () => {
                 setValue('brand', data.brand);
                 setValue('model', data.model);
                 setValue('price', data.price);
+                setValue('durability_km', data.durability_km);
                 setTires(data);
             } catch (error) {
                 console.error(error);

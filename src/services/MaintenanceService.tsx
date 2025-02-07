@@ -5,9 +5,6 @@ import { AuthService } from "../services/auth/AuthService";
 
 const MaintenanceService = {
     create(data: IMaintenance) {
-
-        data.user_id = AuthService.getUser().id;
-
         return api.post('/api/maintenances', data)
     },
 

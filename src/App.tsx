@@ -13,16 +13,13 @@ function App() {
   usePace();
   return (
     <AuthProvider>
-
       <Router>
-        <NavBar />
-
         <ToastContainer />
-        <div className="container mx-auto">
+        <NavBar />
+        <div className="container mx-auto p-4">
           <AppRoutes />
         </div>
       </Router>
-
     </AuthProvider>
   );
 }
