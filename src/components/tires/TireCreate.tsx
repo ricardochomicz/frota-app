@@ -14,18 +14,18 @@ const TireCreate = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<ITires>({ resolver: zodResolver(tiresSchema) });
 
     const onSubmit: SubmitHandler<ITires> = async (data) => {
-        console.log(data)
+
         try {
             const res = await TiresService.create(data);
 
             ToastService.success(res.data.message);
             navigate('/api/tires');
         } catch (error: any) {
-            console.log(error.response?.data.details[0].message);
+            console.log(error);
             ToastService.error(error.response?.data.details[0].message);
         }
     };
@@ -37,7 +37,6 @@ const TireCreate = () => {
             register={register}
             errors={errors}
             textForm="Cadastro de Pneu"
-            isSubmitting={isSubmitting}
         />
     );
 }

@@ -46,6 +46,10 @@ const VehicleService = {
 
     updateMileage(data) {
         return api.put(`/api/vehicles/mileage`, data)
+    },
+
+    vehicleMaintenancesAndTires(id) {
+        return api.get(`/api/vehicles/vehicle-maintenances-tires/${id}`)
     }
 };
 

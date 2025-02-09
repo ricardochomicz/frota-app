@@ -5,7 +5,7 @@ import { ToastService } from "../../services/common/ToastService";
 import { IVehicle } from "../../interfaces/VehicleInterface";
 import { translateFuelType } from "../../helpers/Helpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faTachometerAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faTachometerAlt, faFilter, faCogs } from '@fortawesome/free-solid-svg-icons';
 import { InputMask } from '@react-input/mask';
 import VehicleUpdateMileage from './VehicleUpdateMileage'
 
@@ -166,6 +166,9 @@ const VehiclesIndex = () => {
                                                 <button type="button" onClick={() => handleUpdateKm(Number(vehicle.id))} data-text="Atualizar KM" className="tooltips text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">
                                                     <FontAwesomeIcon icon={faTachometerAlt} />
                                                 </button>
+                                                <Link to={`/api/vehicles/vehicle-maintenances-tires/${vehicle.id}`} data-text="Manutenção e Pneus" className="tooltips text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                                    <FontAwesomeIcon icon={faCogs} />
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}

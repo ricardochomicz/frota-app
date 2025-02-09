@@ -3,7 +3,7 @@ export interface ITires {
     code: string
     brand: string
     model: string
-    price: string
+    price: number
     user_id?: number
     status?: string;
     durability_km: number
