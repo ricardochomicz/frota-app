@@ -30,7 +30,7 @@ const VehicleTiresService = {
         return api.delete(`/api/vehicle-tires/${id}/delete`)
     },
 
-    removeTireToReplace(id: number, data) {
+    markTireForReplacement(id: number, data) {
         return api.put(`/api/vehicle-tires/${id}/remove-to-replace`, data);
     }
 }

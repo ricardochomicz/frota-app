@@ -113,7 +113,7 @@ const CostAnalysisCreate = () => {
             data.vehicle_id = Number(vehicle_id);
             data.vehicle_tire_id = Number(vehicle_tire_id);
             const res = await CostAnalysisService.create(data);
-            await VehicleTiresService.removeTireToReplace(Number(vehicle_tire_id), { mileage_to_replace: kmDrive });
+            await VehicleTiresService.markTireForReplacement(Number(vehicle_tire_id), { mileage_to_replace: kmDrive });
             await TiresService.updateStatusAfterAnalysis(Number(tire_id), { replacement_reason: data.replacement_reason });
             ToastService.success(res.data.message);
             navigate(`/api/maintenances/${maintenance_id}/edit`);

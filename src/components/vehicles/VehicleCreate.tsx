@@ -20,11 +20,8 @@ function CreateVehicle() {
     } = useForm<IVehicle>({ resolver: yupResolver(vehicleSchema) });
 
     const onSubmit: SubmitHandler<IVehicle> = async (data) => {
-        console.log(data)
-
         try {
             const res = await VehicleService.create(data);
-
             ToastService.success(res.data.message);
             navigate('/api/vehicles');
         } catch (error: any) {

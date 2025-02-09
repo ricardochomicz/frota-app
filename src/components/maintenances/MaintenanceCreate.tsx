@@ -44,12 +44,10 @@ const MaintenanceCreate = () => {
     };
 
     const onSubmit: SubmitHandler<IMaintenance> = async (data) => {
-
         if (!vehicleId) {
             console.error("Veículo não selecionado");
             return;
         }
-
         const payload = {
             vehicle_id: vehicleId,
             user_id: Number(AuthService.getUser().id),

@@ -46,20 +46,17 @@ const MaintenanceEdit = () => {
             } catch (error) {
                 console.error("Erro ao buscar pneus:", error);
             }
-
         }
         fetchMaintenance()
     }, [id, setValue]);
 
 
 
-
-    const handleAddTiresChange = async (tires, maintenance_id) => {
+    const addTiresChange = async (tires, maintenance_id) => {
         if (tires.length === 0) {
             console.log("Nenhum pneu para salvar.");
             return;
         }
-
         if (!vehicleId) {
             console.error("Veículo nao selecionado");
             return
@@ -67,7 +64,7 @@ const MaintenanceEdit = () => {
         const existingTires = await VehicleTiresService.getVehicleTiresForMaintenance(vehicleId, Number(id));
 
         console.log("Pneus já existentes:", existingTires);
-        // Filtra pneus novos que não existem no banco
+        // Filtra pneus novos que não existem na tabela vehicle_tires
         const newTires = tires.filter(tire =>
             !existingTires.data.data.some(existingTire => existingTire.tire_id === tire.id)
         );
@@ -114,7 +111,7 @@ const MaintenanceEdit = () => {
         console.log("Enviando manutenção:", payload);
         try {
             const res = await MaintenanceService.update(id, payload);
-            await handleAddTiresChange(newTires, id);
+            await addTiresChange(newTires, id);
             ToastService.success(res.data.message);
             navigate('/api/maintenances');
         } catch (error) {
@@ -126,7 +123,7 @@ const MaintenanceEdit = () => {
 
 
     // Função para passar os novos pneus para o componente pai
-    const handleNewTiresChange = (updatedNewTires: any[]) => {
+    const newTiresChange = (updatedNewTires: any[]) => {
         setNewTires(updatedNewTires);
     };
 
@@ -135,11 +132,10 @@ const MaintenanceEdit = () => {
             <FormMaintenance
                 handleSubmit={handleSubmit(onSubmit)}
                 buttonText="Salvar"
-                register={register} // Seu método de registrar os campos
-                errors={{}} // Suas mensagens de erro
-                isSubmitting={false}
+                register={register}
+                errors={{}}
                 textForm="Editar Manutenção"
-                onNewTiresChange={handleNewTiresChange}
+                onNewTiresChange={newTiresChange}
                 onVehicleIdChange={setVehicleId}// Preenchendo o formulário com os dados da manutenção
                 defaultVehicleId={vehicleId}
                 tires={tires || []}

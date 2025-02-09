@@ -5,11 +5,10 @@ import { ToastService } from "../../services/common/ToastService";
 import { ITires } from "../../interfaces/TiresInterface";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faBroom, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from "../../services/auth/AuthService";
 import { translateStatusTires } from "../../helpers/Helpers";
 
 const TiresIndex = () => {
-    // Tipando o estado com a interface ITires[]
+
     const [tires, setTires] = useState<ITires[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
@@ -20,7 +19,6 @@ const TiresIndex = () => {
 
     const fetchTires = async () => {
         try {
-            const authUser = AuthService.getUser().id;
             const response = await TiresService.getAll(page, limit, filters);
             setTires(response.data.data);
             setTotalPages(response.data.totalPages);
@@ -36,7 +34,8 @@ const TiresIndex = () => {
         fetchTires();
     }, [page, filters]);
 
-    const handleDelete = async (tireId) => {
+
+    const destroyTire = async (tireId) => {
         try {
             await TiresService.destroy(tireId)
             ToastService.success("Pneu excluído com sucesso!");
@@ -46,7 +45,7 @@ const TiresIndex = () => {
         }
     };
 
-    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const filterTires = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
         setPage(1); // Reinicia a paginação ao filtrar
     };
@@ -57,7 +56,9 @@ const TiresIndex = () => {
     };
 
     if (error) {
-        return <div>{error}</div>; // Exibe o erro se houver algum
+        return <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+            <span className="font-medium">Ops!</span> {error}
+        </div>;
     }
 
     return (
@@ -66,7 +67,7 @@ const TiresIndex = () => {
                 <Link to="/api/tires/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novo Pneu</Link>
                 <div className="flex gap-3 ml-auto">
                     <FontAwesomeIcon icon={faFilter} className="text-gray-500 mt-4" size="lg" />
-                    <select name="status" value={filters.status} onChange={handleFilterChange} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <select name="status" value={filters.status} onChange={filterTires} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="" selected>Selecione</option>
                         <option value="available">Disponibilidade</option>
                         <option value="in use">Em Uso</option>
@@ -76,21 +77,21 @@ const TiresIndex = () => {
                         type="text"
                         name="code"
                         placeholder="Código"
-                        value={filters.code} onChange={handleFilterChange}
+                        value={filters.code} onChange={filterTires}
                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     <input
                         type="text"
                         name="brand"
                         placeholder="Marca"
-                        value={filters.brand} onChange={handleFilterChange}
+                        value={filters.brand} onChange={filterTires}
                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     <input
                         type="text"
                         name="model"
                         placeholder="Modelo"
-                        value={filters.model} onChange={handleFilterChange}
+                        value={filters.model} onChange={filterTires}
                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     <button onClick={clearFilters} type="submit" className="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -143,13 +144,11 @@ const TiresIndex = () => {
                                             <small>{tire.license_plate}</small>
                                         </td>
                                         <td className="px-2 py-4 text-center">
-
                                             <Link to={`/api/tires/${tire.id}/edit`} data-text="Editar" className="tooltips text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </Link>
 
-
-                                            <button type="button" onClick={() => handleDelete(tire.id)} data-text="Excluir" className="tooltips text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                            <button type="button" onClick={() => destroyTire(tire.id)} data-text="Excluir" className="tooltips text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
 

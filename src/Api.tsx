@@ -39,11 +39,7 @@ api.interceptors.response.use(
             if (error.response.status === 401 || error.response.data?.details === "jwt expired") {
                 window.location.href = "/login";
                 AuthService.removeToken(); // Remove o token inválido
-
-                // Você pode decidir se precisa redirecionar para a página de login
-                // window.location.href = "/login"; // Redireciona para a página de login
             }
-            // Adicionar outras verificações de status, como 403 (forbidden), 500 (server error) se necessário
         } else {
             // Caso não haja resposta do servidor
             console.error("Erro sem resposta do servidor:", error);

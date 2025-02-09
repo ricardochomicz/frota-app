@@ -48,7 +48,7 @@ const VehiclesIndex = () => {
         }
     };
 
-    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const filterVehicles = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
         setPage(1);
     };
@@ -58,10 +58,9 @@ const VehiclesIndex = () => {
         setSelectedVehicleId(vehicleId);
     };
 
-    const handleSaveMileage = async (mileage: number) => {
+    const saveMileage = async (mileage: number) => {
         if (selectedVehicleId !== null) {
             console.log(`Salvar KM ${mileage} para o veículo ${selectedVehicleId}`);
-            const id = Number(selectedVehicleId);
             const data = {
                 id: selectedVehicleId,
                 mileage: mileage
@@ -76,7 +75,7 @@ const VehiclesIndex = () => {
         setIsDrawerOpen(false);
     };
 
-    const handleCloseDrawer = () => {
+    const closeDrawer = () => {
         setIsDrawerOpen(false);
     };
 
@@ -96,7 +95,7 @@ const VehiclesIndex = () => {
                         <InputMask mask="___-____" replacement={{ _: /[A-Za-z0-9]/ }}
                             name="license_plate"
                             placeholder="Placa"
-                            value={filters.license_plate} onChange={handleFilterChange}
+                            value={filters.license_plate} onChange={filterVehicles}
                             className="uppercase bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
 
@@ -104,14 +103,14 @@ const VehiclesIndex = () => {
                             type="text"
                             name="brand"
                             placeholder="Marca"
-                            value={filters.brand} onChange={handleFilterChange}
+                            value={filters.brand} onChange={filterVehicles}
                             className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
                         <input
                             type="text"
                             name="model"
                             placeholder="Modelo"
-                            value={filters.model} onChange={handleFilterChange}
+                            value={filters.model} onChange={filterVehicles}
                             className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
 
@@ -176,12 +175,11 @@ const VehiclesIndex = () => {
                             {selectedVehicleId !== null && (
                                 <VehicleUpdateMileage
                                     vehicleId={selectedVehicleId}
-                                    onSave={handleSaveMileage}
+                                    onSave={saveMileage}
                                     isOpen={isDrawerOpen}
-                                    onClose={handleCloseDrawer}
+                                    onClose={closeDrawer}
                                 />
                             )}
-
                         </div>
 
                     )

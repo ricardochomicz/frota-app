@@ -8,9 +8,6 @@ import { vehicleSchema } from '../../validations/VehicleSchema';
 import { ToastService } from '../../services/common/ToastService';
 import { IVehicle } from '../../interfaces/VehicleInterface';
 
-interface IVehicleResponse {
-    data: IVehicle;
-}
 
 const VehicleEdit = () => {
     const { id } = useParams<{ id: string }>();
@@ -30,7 +27,6 @@ const VehicleEdit = () => {
                 if (!id) throw new Error('ID do veículo não encontrado');
                 const response = await VehicleService.get(id);
                 const data: IVehicle = response.data.data;
-                console.log(data);
 
                 setValue('brand', data.brand);
                 setValue('model', data.model);
@@ -40,8 +36,7 @@ const VehicleEdit = () => {
                 setValue('fuel_type', data.fuel_type);
                 setVehicle(data);
             } catch (error) {
-                console.error(error);
-                alert('Houve um erro ao carregar os dados do veículo');
+                ToastService.error('Houve um erro ao carregar os dados do veículo');
             }
         };
         fetchVehicle();
@@ -51,7 +46,7 @@ const VehicleEdit = () => {
         try {
             if (!id) throw new Error('ID do veículo não encontrado');
             data.mileage = parseFloat(data.mileage.toString());
-            const res = await VehicleService.update(id, data);
+            const res = await VehicleService.update(Number(id), data);
             console.log(res);
             ToastService.success(res.data.message);
             navigate('/api/vehicles');

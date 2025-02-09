@@ -8,10 +8,6 @@ import { tiresSchema } from '../../validations/TiresSchema';
 import { ToastService } from '../../services/common/ToastService';
 import { ITires } from '../../interfaces/TiresInterface';
 
-interface ITiresResponse {
-    data: ITires;
-}
-
 const TiresEdit = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -22,11 +18,11 @@ const TiresEdit = () => {
         register,
         handleSubmit,
         setValue,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<ITires>({ resolver: zodResolver(tiresSchema) });
 
     useEffect(() => {
-        const fetchTires = async () => {
+        const getTires = async () => {
             try {
                 if (!id) throw new Error('ID do veículo não encontrado');
                 const response = await TiresService.get(id);
@@ -44,10 +40,10 @@ const TiresEdit = () => {
                 alert('Houve um erro ao carregar os dados do pneu');
             }
         };
-        fetchTires();
+        getTires();
     }, [id, setValue]);
 
-    const handleStatusChange = (e) => {
+    const statusChange = (e) => {
         const isChecked = e.target.checked;
         const newStatus = isChecked ? 'lower' : (status === 'in use' ? 'in use' : 'available');
         setStatus(newStatus);
@@ -76,8 +72,7 @@ const TiresEdit = () => {
                     register={register}
                     errors={errors}
                     textForm="Editar Pneu"
-                    isSubmitting={isSubmitting}
-                    handleStatusChange={handleStatusChange}
+                    handleStatusChange={statusChange}
                 />
             ) : (
                 <p>Carregando...</p>

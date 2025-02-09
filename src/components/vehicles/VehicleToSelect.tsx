@@ -18,25 +18,25 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
     const [vehicles, setVehicles] = useState<VehicleOption[]>([]);
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleOption | null>(null);
 
-    const fetchVehicles = async () => {
-        try {
-            const response = await VehicleService.getAllVehiclesToSelect();
-            if (response) {
-                const options = response.data.map((vehicle: any) => ({
-                    value: vehicle.id,
-                    label: `${vehicle.license_plate} - ${vehicle.brand} ( ${vehicle.model} )`,
-                }));
-                setVehicles(options);
-
-                const preselectedVehicle = options.find(vehicle => vehicle.value === vehicleId);
-                setSelectedVehicle(preselectedVehicle || null);
-
-            }
-        } catch (error) {
-            console.error("Erro ao buscar veículos:", error);
-        }
-    };
     useEffect(() => {
+        const fetchVehicles = async () => {
+            try {
+                const response = await VehicleService.getAllVehiclesToSelect();
+                if (response) {
+                    const options = response.data.map((vehicle: any) => ({
+                        value: vehicle.id,
+                        label: `${vehicle.license_plate} - ${vehicle.brand} ( ${vehicle.model} )`,
+                    }));
+                    setVehicles(options);
+
+                    const preselectedVehicle = options.find(vehicle => vehicle.value === vehicleId);
+                    setSelectedVehicle(preselectedVehicle || null);
+                }
+            } catch (error) {
+                console.log("Erro ao buscar veículos:", error);
+            }
+        };
+
         fetchVehicles();
     }, [vehicleId]);
 
@@ -48,8 +48,7 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
     }, [vehicleId, vehicles]);
 
 
-
-    const handleVehicleChange = async (selected: VehicleOption | null) => {
+    const vehicleChange = async (selected: VehicleOption | null) => {
         setSelectedVehicle(selected);
 
         if (selected) {
@@ -115,7 +114,7 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
         <Select
             classNamePrefix="custom-select"
             options={vehicles}
-            onChange={handleVehicleChange}
+            onChange={vehicleChange}
             value={selectedVehicle}
             placeholder="Selecione um veículo..."
             styles={customStyles}

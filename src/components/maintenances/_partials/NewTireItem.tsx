@@ -22,11 +22,11 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
     const [id, setId] = useState(tire.id);
     const [showTires, setShowTires] = useState(false);
 
-    const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const codeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCode(e.target.value);
     };
 
-    const handleSearchClick = async () => {
+    const searchTireCode = async () => {
         onChange(index, 'code', code);
         onChange(index, 'id', id);
 
@@ -60,12 +60,12 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
                         <input
                             type="text"
                             value={code}
-                            onChange={handleCodeChange}
+                            onChange={codeChange}
                             className="bg-gray-50 border border-gray-300 text-gray-900 rounded-l-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
                         <button
                             type="button"
-                            onClick={handleSearchClick}
+                            onClick={searchTireCode}
                             className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
                             Pesquisar
