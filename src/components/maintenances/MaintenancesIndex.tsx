@@ -70,9 +70,9 @@ const MaintenancesIndex = () => {
     return (
         <div>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-4">
                     <Link to="/api/maintenances/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Nova Manutenção</Link>
-                    <div className="flex gap-2 ml-auto">
+                    <div className="flex flex-col md:flex-row gap-3 ml-auto">
                         <FontAwesomeIcon icon={faFilter} className="text-gray-500 mt-4" size="lg" />
                         <input
                             type="text"

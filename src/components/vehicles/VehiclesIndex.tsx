@@ -88,32 +88,53 @@ const VehiclesIndex = () => {
     return (
         <div>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <div className="flex justify-between items-center mb-4">
-                    <Link to="/api/vehicle/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novo Veículo</Link>
-                    <div className="flex gap-2 ml-auto">
-                        <FontAwesomeIcon icon={faFilter} className="text-gray-500 mt-4" size="lg" />
-                        <InputMask mask="___-____" replacement={{ _: /[A-Za-z0-9]/ }}
-                            name="license_plate"
-                            placeholder="Placa"
-                            value={filters.license_plate} onChange={filterVehicles}
-                            className="uppercase bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                <div className="flex flex-col gap-4 mb-4">
+                    {/* Botão "Novo Veículo" */}
+                    <Link
+                        to="/api/vehicle/create"
+                        className="w-auto md:w-auto lg:w-auto max-w-xs text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 text-center"
+                    >
+                        Novo Veículo
+                    </Link>
+
+                    {/* Filtros */}
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 w-full">
+                        {/* Ícone de Filtro (visível apenas em desktop) */}
+                        <FontAwesomeIcon
+                            icon={faFilter}
+                            className="text-gray-500 text-lg hidden md:block"
                         />
 
-                        <input
-                            type="text"
-                            name="brand"
-                            placeholder="Marca"
-                            value={filters.brand} onChange={filterVehicles}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                        <input
-                            type="text"
-                            name="model"
-                            placeholder="Modelo"
-                            value={filters.model} onChange={filterVehicles}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
+                        {/* Campos de Filtro */}
+                        <div className="grid grid-cols-1 gap-2 w-full md:grid-cols-2 lg:grid-cols-3">
+                            <InputMask
+                                mask="___-____"
+                                replacement={{ _: /[A-Za-z0-9]/ }}
+                                name="license_plate"
+                                placeholder="Placa"
+                                value={filters.license_plate}
+                                onChange={filterVehicles}
+                                className="uppercase bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            />
 
+                            <input
+                                type="text"
+                                name="brand"
+                                placeholder="Marca"
+                                value={filters.brand}
+                                onChange={filterVehicles}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            />
+
+                            <input
+                                type="text"
+                                name="model"
+                                placeholder="Modelo"
+                                value={filters.model}
+                                onChange={filterVehicles}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            />
+                        </div>
                     </div>
                 </div>
 

@@ -67,10 +67,10 @@ const UsersIndex = () => {
     return (
 
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-4">
                 <Link to="/api/user/create" className=" w-auto mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novo Usuário</Link>
-                <div className="flex gap-3 ml-auto">
-                    <FontAwesomeIcon icon={faFilter} className="tooltips text-gray-500 mt-4" size="lg" />
+                <div className="flex flex-col md:flex-row gap-3 ml-auto">
+                    <FontAwesomeIcon icon={faFilter} className="tooltips text-gray-500 mt-4 md:mt-0" size="lg" />
                     <select name="role" value={filters.role} onChange={handleFilterChange} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="" selected>Selecione</option>
                         <option value="admin">Admin</option>

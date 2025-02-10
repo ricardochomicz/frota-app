@@ -101,8 +101,8 @@ const CostAnalysisIndex = () => {
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-            <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-3 ml-auto">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-4">
+                <div className="flex flex-col md:flex-row gap-3 ml-auto">
                     {/* Ícone de Filtro */}
                     <FontAwesomeIcon
                         icon={faFilter}
