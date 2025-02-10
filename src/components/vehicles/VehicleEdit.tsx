@@ -22,7 +22,7 @@ const VehicleEdit = () => {
     } = useForm<IVehicle>({ resolver: yupResolver(vehicleSchema) });
 
     useEffect(() => {
-        const fetchVehicle = async () => {
+        const dataVehicle = async () => {
             try {
                 if (!id) throw new Error('ID do veículo não encontrado');
                 const response = await VehicleService.get(id);
@@ -39,7 +39,7 @@ const VehicleEdit = () => {
                 ToastService.error('Houve um erro ao carregar os dados do veículo');
             }
         };
-        fetchVehicle();
+        dataVehicle();
     }, [id, setValue]);
 
     const onSubmit = async (data: IVehicle) => {

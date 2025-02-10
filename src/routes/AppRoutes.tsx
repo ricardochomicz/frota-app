@@ -22,7 +22,7 @@ import VehicleMaintenancesTires from "../components/vehicles/VehicleMaintencesTi
 const AppRoutes: React.FC = () => {  // Tipagem explícita como React Functional Component
     return (
         <Routes>
-            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/api/vehicles" element={<VehiclesIndex />} />

@@ -46,7 +46,7 @@ const TireItem = ({ tire, index, tires, onRemove }) => {
             </div>
             <div className="col-span-12 sm:col-span-2">
                 <div className="mb-4">
-                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Km Substituição Prevista</label>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Km Indicado Substiuição</label>
                     <input type="text" value={tire.predicted_replacement_mileage} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 </div>
             </div>
@@ -54,7 +54,7 @@ const TireItem = ({ tire, index, tires, onRemove }) => {
                 {!tire.to_replace ? (
                     <Link to={`/api/cost-analysis/maintenance/${tire.maintenance_id}/tire/${tire.tire_id}`}
                         state={{ mileage: tire.mileage_at_installation, vehicle_id: tire.vehicle_id, vehicle_tire_id: tire.id }}
-                        data-text="Retirar Pneu"
+                        data-text="Substituição e Análise de custos"
                         className="tooltips mt-7 px-4 py-3 text-sm font-medium text-white bg-red-500 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                     >
                         <FontAwesomeIcon icon={faRetweet} />

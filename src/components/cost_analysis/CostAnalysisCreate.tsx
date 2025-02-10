@@ -108,10 +108,13 @@ const CostAnalysisCreate = () => {
     }
 
     const saveCost: SubmitHandler<ICostAnalysis> = async (data, e) => {
+        console.log(data)
         try {
+
             data.tire_id = Number(tire_id);// Adicionar o ID do pneu
             data.vehicle_id = Number(vehicle_id);
             data.vehicle_tire_id = Number(vehicle_tire_id);
+
             const res = await CostAnalysisService.create(data);
             await VehicleTiresService.markTireForReplacement(Number(vehicle_tire_id), { mileage_to_replace: kmDrive });
             await TiresService.updateStatusAfterAnalysis(Number(tire_id), { replacement_reason: data.replacement_reason });
@@ -170,7 +173,7 @@ const CostAnalysisCreate = () => {
                                 </div>
                                 <div>
                                     <label htmlFor="replacement_reason" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Motivo Substituição</label>
-                                    <select {...register("replacement_reason")} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <select {...register("replacement_reason")} name='replacement_reason' className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                         <option value="" selected>Selecione</option>
                                         {Object.keys(itemType).map(key => (
                                             <option key={key} value={key}>{itemType[key]}</option>
@@ -181,15 +184,16 @@ const CostAnalysisCreate = () => {
                                 <div className="flex flex-row space-x-4 mt-2">
                                     <div className="flex-1">
                                         <div>
-                                            <label htmlFor="km" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Atual</label>
+                                            <label htmlFor="mileage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Atual</label>
                                             <input
-                                                type="number"
+                                                type="text"
                                                 onChange={(e) => setKm(e.target.value ? Number(e.target.value) : "")}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             />
+                                            {errors.mileage && <p className="text-red-500 text-sm">{errors.mileage.message}</p>}
                                         </div>
                                     </div>
-                                    {errors.replacement_reason && <p className="text-red-500 text-sm">{errors.replacement_reason.message}</p>}
+                                    {/* {errors.mileage && <p className="text-red-500 text-sm">{errors.mileage.message}</p>} */}
                                     <div className="flex-1">
                                         <div>
                                             <label htmlFor="mileage_at_installation" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KM Instalação</label>
@@ -209,6 +213,7 @@ const CostAnalysisCreate = () => {
                                                 value={kmDrive}
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             />
+
                                         </div>
                                     </div>
                                 </div>
@@ -234,6 +239,7 @@ const CostAnalysisCreate = () => {
                                             readOnly
                                             className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         />
+
                                     </div>
                                 </div>
 
@@ -243,6 +249,7 @@ const CostAnalysisCreate = () => {
                                         id="description"
                                         {...register("description")}
                                         className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50  border border-gray-300 rounded-lg  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Observação" />
+                                    {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
                                 </div>
 
                                 <button type="submit" className="items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">

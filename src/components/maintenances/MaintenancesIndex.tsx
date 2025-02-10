@@ -41,6 +41,7 @@ const MaintenancesIndex = () => {
         fetchMaintenances();
     }, [page, filters]);
 
+
     const handleDelete = async (maintenanceId) => {
         try {
             await MaintenanceService.destroy(maintenanceId)

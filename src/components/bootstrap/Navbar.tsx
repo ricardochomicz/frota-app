@@ -5,8 +5,11 @@ import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TiresService from '../../services/TiresService';
+import { useNotifications } from '../../context/NotificationsContext';
 
 const NavBar = () => {
+    const { notifications } = useNotifications();
+    const hasNotifications = notifications.length > 0;
     const { authenticated, logout } = useAuth();
     const [user, setUser] = useState<any>(null);
     const navigate = useNavigate();
@@ -14,7 +17,7 @@ const NavBar = () => {
 
     const notify = () => toast.info('🚨 Pneu do veículo ABC123 precisa ser trocado!', {
         position: "top-right",
-        autoClose: 5000, // Tempo que a notificação fica visível
+        autoClose: 10000, // Tempo que a notificação fica visível
         hideProgressBar: true, // Remove a barra de progresso
         closeOnClick: true, // Fecha a notificação ao clicar
         pauseOnHover: true, // Pausa quando o mouse passa por cima
@@ -68,6 +71,11 @@ const NavBar = () => {
                             </li>
                             <li>
                                 <Link to="/api/maintenances" className="text-gray-900 dark:text-white hover:underline">Manutenção</Link>
+                                {hasNotifications && (
+                                    <span className="absolute bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                        {notifications.length}
+                                    </span>
+                                )}
                             </li>
                             <li>
                                 <Link to="/api/cost-analysis" className="text-gray-900 dark:text-white hover:underline">Análise de Custo</Link>

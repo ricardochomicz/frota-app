@@ -19,7 +19,7 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleOption | null>(null);
 
     useEffect(() => {
-        const fetchVehicles = async () => {
+        const getVehicles = async () => {
             try {
                 const response = await VehicleService.getAllVehiclesToSelect();
                 if (response) {
@@ -37,7 +37,7 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
             }
         };
 
-        fetchVehicles();
+        getVehicles();
     }, [vehicleId]);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
             // Chama o onSelect passando o ID do veículo
             onSelect(selected.value);
 
-            // Fetch de detalhes do veículo selecionado para obter o mileage
+            // Detalhes do veículo selecionado para obter o mileage
             const vehicleDetails = await VehicleService.get(selected.value);
             console.log(vehicleDetails)
 
@@ -70,10 +70,10 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
         control: (base, state) => ({
             ...base,
             backgroundColor: state.isFocused
-                ? "rgb(31 41 55)" // Tailwind light gray
-                : "rgb(55, 65, 81)",   // Tailwind dark gray (dark mode background)
-            borderColor: state.isFocused ? "rgb(59 130 246)" : "rgb(31 41 55)", // Tailwind blue focus
-            borderRadius: "0.375rem", // Tailwind rounded
+                ? "rgb(31 41 55)"
+                : "rgb(55, 65, 81)",
+            borderColor: state.isFocused ? "rgb(59 130 246)" : "rgb(31 41 55)",
+            borderRadius: "0.375rem",
             height: "3rem",
             padding: "0.5rem",
             minHeight: "3rem",
@@ -81,32 +81,32 @@ const VehicleToSelect: React.FC<Props> = ({ onSelect, onMileageChange, vehicleId
         }),
         menu: (base) => ({
             ...base,
-            backgroundColor: "rgb(31 41 55)", // Dark background
-            color: "white", // White text
+            backgroundColor: "rgb(31 41 55)",
+            color: "white",
         }),
         option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
-                ? "rgb(59 130 246)" // Blue when selected
+                ? "rgb(59 130 246)"
                 : state.isFocused
-                    ? "rgb(55 48 63)" // Lighter on hover
+                    ? "rgb(55 48 63)"
                     : "transparent",
-            color: "white", // White text when selected
+            color: "white",
             padding: "0.5rem 1rem",
             cursor: "pointer",
             borderRadius: "0.375rem",
         }),
         singleValue: (base) => ({
             ...base,
-            color: "white", // White text
+            color: "white",
         }),
         placeholder: (base) => ({
             ...base,
-            color: "rgb(209 213 219)", // Light gray placeholder text
+            color: "rgb(209 213 219)",
         }),
         input: (base) => ({
             ...base,
-            color: "white", // Texto digitado em branco
+            color: "white",
         }),
     };
 

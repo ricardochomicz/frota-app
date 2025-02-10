@@ -18,7 +18,7 @@ const TireCreate = () => {
     } = useForm<ITires>({ resolver: zodResolver(tiresSchema) });
 
     const onSubmit: SubmitHandler<ITires> = async (data) => {
-
+        console.log(data)
         try {
             const res = await TiresService.create(data);
 

@@ -10,7 +10,7 @@ interface VehicleUpdateMileageProps {
 const VehicleUpdateMileage: React.FC<VehicleUpdateMileageProps> = ({ vehicleId, onSave, isOpen, onClose }) => {
     const [mileage, setMileage] = useState('');
 
-    const handleSave = () => {
+    const saveNewMileage = () => {
         const mileageValue = parseInt(mileage, 10);
         if (!isNaN(mileageValue)) {
             onSave(mileageValue);
@@ -42,7 +42,7 @@ const VehicleUpdateMileage: React.FC<VehicleUpdateMileageProps> = ({ vehicleId, 
                     />
                 </div>
 
-                <a href="#" onClick={handleSave} className="block mt-3 items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                <a href="#" onClick={saveNewMileage} className="block mt-3 items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                     Salvar
                 </a>
             </div>
