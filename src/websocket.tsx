@@ -1,26 +1,27 @@
-// Conectar ao servidor WebSocket
-const socket = new WebSocket('ws://localhost:5000');
+// import WebSocket from 'ws';
 
-// Quando a conexão for aberta
-socket.onopen = () => {
-    console.log('Conexão WebSocket estabelecida');
-    // Enviar uma mensagem ao servidor, se necessário
-    socket.send('Olá, servidor!');
-};
+// const wss = new WebSocket.Server({ port: 5000 }); // WebSocket na porta 5002
 
-// Quando uma mensagem for recebida do servidor
-socket.onmessage = (event) => {
-    console.log('Mensagem recebida do servidor:', event.data);
-    // Exibir notificação ou atualizar a interface com a mensagem
-    alert(event.data);
-};
+// wss.on('connection', (ws) => {
+//     console.log('Novo cliente conectado!');
 
-// Quando ocorrer um erro
-socket.onerror = (error) => {
-    console.error('Erro no WebSocket:', error);
-};
+//     // Enviar uma mensagem quando a conexão for estabelecida
+//     ws.send('Conexão WebSocket estabelecida com sucesso!');
 
-// Quando o servidor desconectar
-socket.onclose = () => {
-    console.log('Conexão WebSocket fechada');
-};
+//     // Quando o servidor recebe uma mensagem do cliente
+//     ws.on('message', (message) => {
+//         console.log('Mensagem recebida do cliente:', message);
+//     });
+
+//     // Quando o cliente desconectar
+//     ws.on('close', () => {
+//         console.log('Cliente desconectado');
+//     });
+
+//     // Tratamento de erros
+//     ws.on('error', (error) => {
+//         console.error('Erro no WebSocket:', error);
+//     });
+// });
+
+// console.log('Servidor WebSocket rodando na porta 5002...');

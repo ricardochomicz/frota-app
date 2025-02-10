@@ -15,13 +15,7 @@ const NavBar = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const notify = () => toast.info('🚨 Pneu do veículo ABC123 precisa ser trocado!', {
-        position: "top-right",
-        autoClose: 10000, // Tempo que a notificação fica visível
-        hideProgressBar: true, // Remove a barra de progresso
-        closeOnClick: true, // Fecha a notificação ao clicar
-        pauseOnHover: true, // Pausa quando o mouse passa por cima
-    });
+    console.log('Notificações no Navbar:', notifications);
 
     const handleVerifyTires = async () => {
         setLoading(true); // Exibe o spinner

@@ -1,6 +1,43 @@
 # Manutenção de Frota
 
-Este projeto foi criado com [Create React App](https://github.com/facebook/create-react-app).
+Sistema para gerenciamento de frota com foco no controle de pneus e análise de custos.
+
+### Tecnologias utilizadas
+- React
+- Typescript
+
+### Clone o projeto
+```bash
+  git clone https://github.com/ricardochomicz/frota-app.git
+```
+
+### Instale as dependências
+```bash
+  npm install
+```
+
+### Inicie o projeto
+```bash
+  npm start
+```
+
+### Acesse o projeto
+[http://localhost:3000](http://localhost:3000)
+
+## Funcionalidades
+- Registro
+- Login
+- CRUD de usuários
+- CRUD de veículos
+- CRUD manutenções
+- CRUD de pneus
+- Análise de custos
+- Alerta de pneus para substituição
+- Envio de e-mail para informar pneus para substituição
+
+### Como usar
+
+Acesse o sistema e na página de login, clique em "Crie sua conta aqui"
 
 ## Estrutura do Projeto
 
@@ -42,23 +79,4 @@ Abra [http://localhost:3000](http://localhost:3000) para visualizá-lo no navega
 A página será recarregada se você fizer edições.\
 Você também verá quaisquer erros de lint no console.
 
-## Estrutura de Pastas
-
-- **public/**: Contém arquivos estáticos como `index.html`, `manifest.json` e `robots.txt`.
-- **src/**: Contém o código-fonte do projeto.
-  - **components/**: Contém os componentes React organizados por funcionalidade.
-    - **auth/**: Componentes relacionados à autenticação.
-    - **bootstrap/**: Componentes de inicialização.
-    - **cost_analysis/**: Componentes de análise de custos.
-    - **maintenances/**: Componentes de manutenção.
-    - **tires/**: Componentes relacionados a pneus.
-    - **users/**: Componentes de usuários.
-    - **vehicles/**: Componentes de veículos.
-  - **context/**: Contém os contextos React, como `AuthContext.tsx`.
-  - **helpers/**: Funções auxiliares, como `Helpers.tsx` e `PaceJs.tsx`.
-  - **interfaces/**: Contém as interfaces TypeScript.
-  - **routes/**: Definições de rotas do aplicativo.
-  - **services/**: Serviços para comunicação com APIs.
-  - **validations/**: Esquemas de validação.
-  - **websocket.tsx**: Configuração do WebSocket.
 
