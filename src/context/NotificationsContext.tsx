@@ -33,16 +33,17 @@ export const NotificationsProvider: React.FC<NotificationsProviderProps> = ({ ch
 
         ws.current.onmessage = (event) => {
             try {
-                console.log('Mensagem recebida do servidor:', event.data);
                 const data = JSON.parse(event.data);
                 console.log("data", data.type)
 
-                console.log('Notificação recebida no frontend:', event);
-                if (data.type === "tire_replacement") {
+                if (data.type === "connection_success") {
+                    console.log("Mensagem de conexão recebida.");
+                } else if (data.type === "tire_warning") {
+                    console.log("Mensagem de aviso de troca recebida.");
                     setNotifications((prev) => [...prev, data]);
-                }
-                else {
-                    console.log("Mensagem WebSocket sem tipo esperado:", data);
+                } else if (data.type === "tire_replacement") {
+                    console.log("Mensagem de substituição de pneu recebida.");
+                    setNotifications((prev) => [...prev, data]);
                 }
             } catch (error) {
                 console.error("Erro ao processar notificação WebSocket:", error);

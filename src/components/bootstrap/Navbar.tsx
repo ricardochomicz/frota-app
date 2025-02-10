@@ -8,7 +8,7 @@ import TiresService from '../../services/TiresService';
 import { useNotifications } from '../../context/NotificationsContext';
 
 const NavBar = () => {
-    const { notifications } = useNotifications();
+    const { notifications, clearNotifications } = useNotifications();
     const hasNotifications = notifications.length > 0;
     const { authenticated, logout } = useAuth();
     const [user, setUser] = useState<any>(null);
@@ -19,6 +19,7 @@ const NavBar = () => {
 
     const handleVerifyTires = async () => {
         setLoading(true); // Exibe o spinner
+        clearNotifications(); // Limpa as notificações
 
         try {
             await TiresService.verifyTires(); // Chama o serviço
@@ -65,11 +66,10 @@ const NavBar = () => {
                             </li>
                             <li>
                                 <Link to="/api/maintenances" className="text-gray-900 dark:text-white hover:underline">Manutenção</Link>
-                                {hasNotifications && (
-                                    <span className="absolute bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                                        {notifications.length}
-                                    </span>
-                                )}
+                                <span className="absolute bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                    {notifications.length}
+                                </span>
+
                             </li>
                             <li>
                                 <Link to="/api/cost-analysis" className="text-gray-900 dark:text-white hover:underline">Análise de Custo</Link>

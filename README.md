@@ -73,6 +73,10 @@ Sistema para gerenciamento de frota com foco no controle de pneus e análise de 
 
 9. Na página de análise de custo tem a relação de pneus que foram substituídos e suas respectivas análises de custos. Podendo ser gerado um relatório pelo mês selecionado em PDF ou Excel.
 
+10. As verificaçãos são realizadas de hora em hora através de um cronjob, ou através do link "Verificar Pneus".
+
+11. Na página de veículos clicando no botão "Manutenção e Pneus" é possível ver as manutenções e pneus instalados em cada veículo.
+
 
 ## Estrutura do Projeto
 
