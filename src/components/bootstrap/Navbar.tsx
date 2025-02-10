@@ -53,7 +53,7 @@ const NavBar = () => {
                         <li className="relative">
                             <Link to="/api/maintenances" className="hover:text-blue-500 dark:text-white">Manutenção</Link>
                             {notifications.length > 0 && (
-                                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                <span className="absolute top-0 right-[10] bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                                     {notifications.length}
                                 </span>
                             )}
