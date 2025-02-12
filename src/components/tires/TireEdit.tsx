@@ -73,6 +73,7 @@ const TiresEdit = () => {
                     errors={errors}
                     textForm="Editar Pneu"
                     handleStatusChange={statusChange}
+                    isCreate={true}
                 />
             ) : (
                 <p>Carregando...</p>

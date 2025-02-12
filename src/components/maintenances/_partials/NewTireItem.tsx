@@ -29,10 +29,12 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
     const searchTireCode = async () => {
         onChange(index, 'code', code);
         onChange(index, 'id', id);
+        console.log(code);
 
         try {
             const response = await VehicleTiresService.getTireInfoByCode(code);
             const result = response.data;
+            console.log(result.data.status);
 
             if (result.data) {
                 onChange(index, 'id', result.data.id);
@@ -42,7 +44,7 @@ const NewTireForm: React.FC<NewTireFormProps> = ({ tire, index, onChange, onRemo
                 onChange(index, 'model', result.data.model);
             }
         } catch (error) {
-            console.error(error.response.data);
+            console.error(error.response.data.error);
             ToastService.error(error.response.data.error);
             setCode("");
         }

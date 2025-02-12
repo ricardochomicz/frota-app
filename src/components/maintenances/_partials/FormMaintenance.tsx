@@ -19,8 +19,8 @@ const FormMaintenance = ({
     defaultVehicleId,
     defaultMileage,
     tires,
-}) => {
 
+}) => {
     const { setValue } = useForm()
     const { id } = useParams<{ id: string }>();
     const [vehicleId, setVehicleId] = useState<number | null>(null);
@@ -29,7 +29,6 @@ const FormMaintenance = ({
     const [newTires, setNewTires] = useState([{ code: '', brand: '', model: '' }]);
     const [showInputs, setShowInputs] = useState(false);
     const [status, setMaintenance] = useState<number | null>(null);
-
 
     const mileageChange = (newMileage: number) => {
         setMileage(newMileage);

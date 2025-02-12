@@ -1,9 +1,18 @@
 import { z } from 'zod';
 
 export const tiresSchema = z.object({
-    code: z.string({ message: 'O Codigo é obrigatório' }),
-    brand: z.string({ message: 'A Marca é obrigatória' }),
-    model: z.string({ message: 'O Modelo é obrigatório' }),
-    price: z.string({ message: 'Preço é obrigatório' }),
-    durability_km: z.string().min(0, 'A durabilidade deve ser maior que zero'),
-})
+    code: z.string().min(3, { message: "Codigo obrigatório e o minímo de 3 caracteres" }),
+    model: z.string().min(1, { message: "O modelo do pneu é obrigatório" }),
+    brand: z.string().min(1, { message: "A marca do pneu é obrigatória" }),
+
+    price: z
+        .string()
+        .regex(/^\d+(\.\d{1,2})?$/, { message: "Preço do pneu obrigatório." }),
+
+    durability_km: z
+        .union([z.string().refine(val => !isNaN(Number(val)), { message: "Deve ser um número válido" }), z.number()])
+        .transform(val => typeof val === 'string' ? Number(val) : val)
+        .optional(),
+
+});
+

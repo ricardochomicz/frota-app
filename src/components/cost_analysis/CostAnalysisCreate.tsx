@@ -46,7 +46,7 @@ const CostAnalysisCreate = () => {
     const getTire = async (tire_id: number) => {
         if (!tire_id) return;
         try {
-            const response = await TiresService.get(tire_id)
+            await TiresService.get(tire_id)
                 .then(response => {
                     setTireInfo({
                         id: response.data.data.id,
@@ -57,7 +57,6 @@ const CostAnalysisCreate = () => {
                         durability_km: response.data.data.durability_km,
                         created_at: response.data.data.created_at
                     });
-
                 })
         } catch (error) {
             console.error("Erro ao buscar o pneu:", error);
@@ -91,8 +90,8 @@ const CostAnalysisCreate = () => {
                 setCustoPorKm(0); // Evitar Infinity, exibe 0
             }
         } else {
-            setPerformanceScore(0); // Caso os valores sejam inválidos, exibe 0
-            setCustoPorKm(0); // Evitar Infinity, exibe 0
+            setPerformanceScore(0);
+            setCustoPorKm(0);
         }
 
         getTire(Number(tire_id));

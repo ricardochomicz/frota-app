@@ -7,13 +7,15 @@ import { IMaintenance } from '../../interfaces/MaintenanceInterface';
 import MaintenanceService from '../../services/MaintenanceService';
 import VehicleTiresService from '../../services/VehicleTiresService';
 import moment from 'moment';
-import { AuthService } from '../../services/auth/AuthService';
 
 
 const MaintenanceCreate = () => {
+    const { setValue } = useForm()
     const [newTires, setNewTires] = useState([]);
     const [vehicleId, setVehicleId] = useState<number | null>(null);
+    const [mileage, setMileage] = useState<number | null>(null);
     const navigate = useNavigate();
+    const methods = useForm();
 
     const {
         register,
@@ -44,32 +46,34 @@ const MaintenanceCreate = () => {
     };
 
     const onSubmit: SubmitHandler<IMaintenance> = async (data) => {
-        if (!vehicleId) {
-            console.error("Veículo não selecionado");
-            return;
-        }
-        const payload = {
-            vehicle_id: vehicleId,
-            user_id: Number(AuthService.getUser().id),
-            type: data.type,
-            description: data.description,
-            mileage_at_maintenance: Number(data.mileage_at_maintenance),
-        };
 
-        console.log("Enviando manutenção:", payload);
-        const res = await MaintenanceService.create(payload);
-        console.log(res.data.data.id)
+        // if (!vehicleId) {
+        //     console.error("Veículo não selecionado");
+        //     return;
+        // }
+        // const actualMileage = mileage ?? data.mileage_at_maintenance;;
+        // const payload = {
+        //     vehicle_id: vehicleId,
+        //     user_id: Number(AuthService.getUser().id),
+        //     type: data.type,
+        //     description: data.description,
+        //     mileage_at_maintenance: Number(mileage),
+        // };
 
-        // Chamar handleSaveNewTires com o ID da manutenção
-        await handleSaveNewTires(newTires, res.data.data.id);
+        // console.log("Enviando manutenção:", payload);
+        // const res = await MaintenanceService.create(payload);
+        // console.log(res.data.data.id)
 
-        ToastService.success(res.data.message);
-        navigate('/api/maintenances');
+        // // Chamar handleSaveNewTires com o ID da manutenção
+        // await handleSaveNewTires(newTires, res.data.data.id);
+
+        // ToastService.success(res.data.message);
+        // navigate('/api/maintenances');
     };
 
     return (
         <div>
-            <FormMaintenance
+            <FormMaintenance {...methods}
                 handleSubmit={handleSubmit(onSubmit)}
                 buttonText="Salvar"
                 register={register}
@@ -77,6 +81,7 @@ const MaintenanceCreate = () => {
                 textForm="Nova Manutenção"
                 isSubmitting={isSubmitting}
                 onVehicleIdChange={handleVehicleIdChange}
+                onMileageChange={setMileage} // Passa a função para atualizar a milhagem
                 onNewTiresChange={setNewTires} // Passa a função para atualizar os novos pneus
             />
         </div>

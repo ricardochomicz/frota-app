@@ -17,7 +17,7 @@ const MaintenancesIndex = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [filters, setFilters] = useState({ type: "", startDate: "", endDate: "", license_plate: "" });
-    const limit = 5
+    const limit = 10
 
     const fetchMaintenances = async () => {
         // setLoading(true)
@@ -148,7 +148,7 @@ const MaintenancesIndex = () => {
                                                 {maintenance.vehicle.brand} - {maintenance.vehicle.model}<br />
                                                 <small>{maintenance.vehicle.license_plate}</small>
                                             </td>
-                                            <td className="px-6 py-4 text-center">{maintenance.mileage_at_maintenance} Km</td>
+                                            <td className="px-6 py-4 text-center">{maintenance.vehicle.mileage} Km</td>
                                             <td className="px-6 py-4 text-center">{maintenance.data_user.name}</td>
                                             <td className="px-6 py-4 text-center">{format(maintenance.updated_at, "dd/MM/yyyy")}</td>
                                             <td className="px-6 py-4 text-center">
