@@ -32,8 +32,6 @@ const Login: React.FC = () => {
                 password_hash: data.password_hash,
             });
 
-            alert(res.user)
-
             if (res) {
                 // retorna os dados do usuário autenticado
                 login({ ...res.user, id: res.user.id.toString() });
